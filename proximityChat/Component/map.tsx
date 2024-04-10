@@ -1,74 +1,83 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text,StyleSheet } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import * as Location from 'expo-location';
+import MapView, { Marker } from 'react-native-maps';
 
-export default function MapCustom() {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [markers, setMarkers] = useState([]);
+import data from './test.json';
+
+const MapScreen = () => {
+  const [userLocation, setUserLocation] = useState(null);
+  const [nearbyUsers, setNearbyUsers] = useState([]);
 
   useEffect(() => {
-    async function getLocationAsync() {
+    setNearbyUsers(data.users);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+        console.log('Permission to access location was denied');
         return;
       }
 
-      try {
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-      } catch (error) {
-        setErrorMsg('Error getting current location: ' + error.message);
-      }
-    }
+      let location = await Location.getCurrentPositionAsync({});
+      setUserLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
 
-    getLocationAsync();
+      Location.watchPositionAsync({}, (location) => {
+        setUserLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      });
+    })();
+
+    return () => {
+      Location.stopLocationUpdatesAsync('taskName');
+    };
   }, []);
 
-  const handleMapPress = (event) => {
-    const newMarker = {
-      coordinate: event.nativeEvent.coordinate,
-      title: 'New Marker',
-      description: 'This is a new marker',
-    };
-    setMarkers([...markers, newMarker]);
-  };
-
   return (
-    <View className="flex-1 relative">
-      {errorMsg && <Text>{errorMsg}</Text>}
-      {location ? (
+    <View style={styles.view}>
+      {userLocation && (
         <MapView
-        
-        className="flex  relative justify-center align-middle inset-0  min-h-full min-w-full  w-full h-full"
+          style={styles.map}
           initialRegion={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+            latitudeDelta: 0.03, // Adjust zoom level
+            longitudeDelta: 0.03,
           }}
-          onPress={handleMapPress}
         >
-          {markers.map((marker, index) => (
+          <Marker coordinate={userLocation} title="You" />
+          {nearbyUsers.map(user => (
             <Marker
-              key={index}
-              coordinate={marker.coordinate}
-              title={marker.title}
-              description={marker.description}
+              key={user.id} // Using "id" as the unique key
+              coordinate={{ latitude: parseFloat(user.latitude), longitude: parseFloat(user.longitude) }}
+              title={user.name}
             />
           ))}
         </MapView>
-      ) : (
-        <Text>Loading...</Text>
       )}
     </View>
   );
- 
-}
- const styles = StyleSheet.create({
-    map: {
-      ...StyleSheet.absoluteFillObject,
-    },
+};
+
+const styles = StyleSheet.create({
+  map: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    flex: 1,
+  },
+  view: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
+
+export default MapScreen;
