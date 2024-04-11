@@ -27,7 +27,7 @@ export default function App() {
   
     <stack.Screen name="Map" component={MapScreen}/>
     <stack.Screen name="Chat" component={ChatScreen}/>
-    <stack.Screen name="Chat" component={ChatScreen}/>
+    
 
       </stack.Navigator>
     </NavigationContainer>
