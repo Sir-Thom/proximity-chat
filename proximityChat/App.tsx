@@ -6,7 +6,20 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const stack = createStackNavigator();
+
+
 export default function App() {
+ // const [theme, setTheme] = useState<string>('');
+  //const colorScheme = Appearance.getColorScheme();
+  
+ /* useEffect(() => {
+    if (colorScheme === 'dark') {
+      setTheme(' bg-slate-800 ');
+    } else {
+      setTheme(' bg-slate-100 ');
+    }
+  }, [colorScheme])*/
+
   return (
     <NavigationContainer>
       <stack.Navigator>
@@ -27,3 +40,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+  {/*  <View className={`flex-1 justify-center items-centered ${theme}`}>
+      <StatusBar style="auto" />
+    </View>
+  );
+}*/}
+
