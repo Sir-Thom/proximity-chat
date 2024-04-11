@@ -2,6 +2,7 @@ import "react-native-gesture-handler";
 import { StyleSheet, Text, View } from 'react-native';
 import MapScreen from './Screens/MapScreen';
 import TestScreen from './Screens/TestScreen';
+import ChatScreen from "./Screens/ChatScreen";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -25,7 +26,7 @@ export default function App() {
       <stack.Navigator>
   
     <stack.Screen name="Map" component={MapScreen}/>
-    <stack.Screen name="TestScreen" component={TestScreen}/>
+    <stack.Screen name="Chat" component={ChatScreen}/>
 
       </stack.Navigator>
     </NavigationContainer>

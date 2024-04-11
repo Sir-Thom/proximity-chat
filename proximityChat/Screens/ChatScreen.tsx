@@ -109,3 +109,10 @@ export default function ChatScreen() {
     </SafeAreaProvider>
   )
 }
+ChatScreen.navigationOptions = ({ route }) => ({
+  title: route.params.name, // Set the header title to the user name
+  headerTitle: route.params.name, // Set the screen name to the user name
+  headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+});
