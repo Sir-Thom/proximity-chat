@@ -6,7 +6,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import Guid from 'guid';
 
-export default function ChatScreen() {
+export default function ChatScreen(props) {
+  const { navigation } = props;
+  useEffect(() => {
+      navigation.setOptions({
+          title: props.route.params.name,
+      });
+  }, [navigation]);
   const user = { id: '06c33e8b-e835-4736-80f4-63f44b66666c' } // TODO: user par firebase
   const user2 = { id: '06c33e8b-e835-4736-80f4-63f34b66666c' } // TODO: user par firebase
   const [messages, setMessages] = useState<MessageType.Any[]>([
