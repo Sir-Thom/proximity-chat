@@ -62,7 +62,7 @@ const MapScreen = ({ navigation }) => {
               key={user.id}
               coordinate={{ latitude: parseFloat(user.latitude), longitude: parseFloat(user.longitude) }}
               title={user.name}
-              onPress={() => navigation.navigate("TestScreen", { name: user.name })}
+              onPress={() => navigation.navigate("Chat", { name: user.name })}
             />
           ))}
         </MapView>

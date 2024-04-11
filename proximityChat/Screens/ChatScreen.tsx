@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Appearance, View } from 'react-native';
 import { Chat, MessageType, defaultTheme, darkTheme, Theme } from '@flyerhq/react-native-chat-ui';
 import { PreviewData } from '@flyerhq/react-native-link-preview';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import Guid from 'guid';
 
@@ -92,20 +91,22 @@ export default function ChatScreen() {
     customDarkTheme.colors.secondary = '#64748b';
     
     setTheme(colorScheme === 'dark' ? customDarkTheme : defaultTheme)
+    
+    let customTheme = theme;
+    customTheme.borders.inputBorderRadius = 20;
+
+    setTheme(customTheme);
   }, [colorScheme])
 
   return (
-    <SafeAreaProvider style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{ height: '97%', width: '95%', margin: 'auto', borderRadius: 20, overflow: 'hidden' }}>
-      <Chat
-        messages={messages}
-        user={user}
-        theme={colorScheme === 'dark' ? darkTheme : defaultTheme}
-        onSendPress={handleSendPress}
-        onAttachmentPress={handleImageSelection}
-        onPreviewDataFetched={handlePreviewDataFetched}
-        />
-      </View>
-    </SafeAreaProvider>
+    <Chat
+      messages={messages}
+      user={user}
+      theme={colorScheme === 'dark' ? darkTheme : defaultTheme}
+      onSendPress={handleSendPress}
+      onAttachmentPress={handleImageSelection}
+      onPreviewDataFetched={handlePreviewDataFetched}
+      showUserAvatars={true}
+    />
   )
 }
