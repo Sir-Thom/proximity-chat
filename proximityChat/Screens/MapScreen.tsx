@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
-import {styled} from "nativewind"
+import { createStackNavigator } from '@react-navigation/stack';
 import data from './test.json';
 
-const MapScreen = () => {
+const stack = createStackNavigator();
+
+const MapScreen = ({ navigation }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [nearbyUsers, setNearbyUsers] = useState([]);
 
@@ -14,7 +16,7 @@ const MapScreen = () => {
   }, []);
 
   useEffect(() => {
-    (async () => {
+    const getLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         console.log('Permission to access location was denied');
@@ -33,7 +35,9 @@ const MapScreen = () => {
           longitude: location.coords.longitude,
         });
       });
-    })();
+    };
+
+    getLocation();
 
     return () => {
       Location.stopLocationUpdatesAsync('taskName');
@@ -55,9 +59,10 @@ const MapScreen = () => {
           <Marker coordinate={userLocation} title="You" />
           {nearbyUsers.map(user => (
             <Marker
-              key={user.id} // Using "id" as the unique key
+              key={user.id}
               coordinate={{ latitude: parseFloat(user.latitude), longitude: parseFloat(user.longitude) }}
               title={user.name}
+              onPress={() => navigation.navigate("TestScreen", { name: user.name })}
             />
           ))}
         </MapView>
@@ -81,3 +86,4 @@ const styles = StyleSheet.create({
 });
 
 export default MapScreen;
+
