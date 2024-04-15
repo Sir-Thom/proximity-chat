@@ -1,10 +1,19 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Button } from 'react-native';
 import React, {useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { firebase } from '../firebaseconfig';
 
 export default function LoginPage() {
 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     const navigation = useNavigation();
+
+    const loginUser = async (email, password) => {
+        await firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {})
+    }
 
     return (  
         <View style={styles.container}>
@@ -14,15 +23,19 @@ export default function LoginPage() {
                 style={styles.textInput}
                 placeholder="Email"
                 autoCorrect = {false}
+                onChangeText={(text) => setEmail(text)}
             />
             <TextInput 
                 style={styles.textInput}
                 placeholder="Password"
                 autoCorrect = {false}
+                secureTextEntry={true}
+                onChangeText={(text) => setPassword(text)}
             />
             </View>
             <TouchableOpacity 
                 style={styles.button}
+                onPress={() => loginUser(email, password)}
             >
                 <Text style = {styles.buttonText}>Login</Text>
             </TouchableOpacity>

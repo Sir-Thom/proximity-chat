@@ -6,7 +6,7 @@ export default function RegistrationPage() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [firstname, setFirstname] = useState(''); 5
+    const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
 
     const registerUser = async (email, password, firstname, lastname) => {
