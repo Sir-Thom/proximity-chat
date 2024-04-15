@@ -1,55 +1,70 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Button } from 'react-native';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../firebaseconfig';
 
 export default function LoginPage() {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     const navigation = useNavigation();
 
     const loginUser = async (email, password) => {
-        await firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(() => {})
+        try {
+            await firebase.auth().signInWithEmailAndPassword(email, password);
+        } catch (error) {
+            console.error("Erreur de connexion:", error.message);
+        }
     }
 
-    return (  
+    const handleForgotPassword = () => {
+        
+    }
+
+    return (
         <View style={styles.container}>
-            <Text style= {styles.titleText}>Login</Text>
-            <View style={{marginTop:40}}>
-            <TextInput 
-                style={styles.textInput}
-                placeholder="Email"
-                autoCorrect = {false}
-                onChangeText={(text) => setEmail(text)}
-            />
-            <TextInput 
-                style={styles.textInput}
-                placeholder="Password"
-                autoCorrect = {false}
-                secureTextEntry={true}
-                onChangeText={(text) => setPassword(text)}
-            />
+            <StatusBar backgroundColor="#1f2937"/>
+            <View style={styles.logoContainer}>
+                <Image
+                    style={styles.logo}
+                    source={require('../assets/icon-removebg.png')}
+                    alt="Your Company"
+                />
+                <Text style={styles.title}>Sign in to your account</Text>
             </View>
-            <TouchableOpacity 
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Email address</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    autoCorrect={false}
+                    onChangeText={(text) => setEmail(text)}
+                />
+                <View style={styles.passwordContainer}>
+                    <Text style={styles.label}>Password</Text>
+                    <TouchableOpacity onPress={handleForgotPassword}>
+                        <Text style={styles.forgotPassword}>Forgot password?</Text>
+                    </TouchableOpacity>
+                </View>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    autoCorrect={false}
+                    secureTextEntry={true}
+                    onChangeText={(text) => setPassword(text)}
+                />
+            </View>
+            <TouchableOpacity
                 style={styles.button}
                 onPress={() => loginUser(email, password)}
             >
-                <Text style = {styles.buttonText}>Login</Text>
+                <Text style={styles.buttonText}>Sign in</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-                style={{marginTop:20}}
-                onPress={() => navigation.navigate('Register')}
-            >
-                <Text style = {styles.SecondaryButtonText}>Register</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-                style={{marginTop:20}}
-            >
-                <Text style = {styles.SecondaryButtonText}>Foget Password?</Text>
-            </TouchableOpacity>
+            <Text style={styles.signupText}>
+                Not a member?{' '}
+                <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                    <Text style={styles.signupLink}>Register</Text>
+                </TouchableOpacity>
+            </Text>
         </View>
     );
 }
@@ -57,40 +72,72 @@ export default function LoginPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: "center",
-        marginTop: 100,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingHorizontal: 20,
+        backgroundColor: '#1f2937',
     },
-    textInput: {
-        paddingTop: 20,
-        paddingBottom: 10,
-        width: 250,
-        fontSize: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: "#000",
+    logoContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    logo: {
+        width: 300,
+        height: 300,
         marginBottom: 10,
-        textAlign: "center"
     },
-    titleText: {
-        fontSize: 26,
-        fontWeight: "bold",
-        marginLeft: 10,
-        marginTop: 10
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#ffffff',
+    },
+    inputContainer: {
+        width: '100%',
+        marginBottom: 20,
+    },
+    label: {
+        color: '#ffffff',
+        fontSize: 16,
+        marginBottom: 5,
+    },
+    input: {
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        marginBottom: 10,
+        borderRadius: 10,
+        color: '#ffffff',
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    forgotPassword: {
+        color: '#4f46e5',
+        fontSize: 14,
     },
     button: {
-        marginTop: 40,
-        height: 70,
-        width: 250,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#10ABFF",
-        borderRadius: 50
+        backgroundColor: '#4f46e5',
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 30,
+        marginBottom: 10,
     },
     buttonText: {
-        fontWeight: "bold",
-        fontSize: 22
+        color: '#ffffff',
+        fontWeight: 'bold',
+        fontSize: 18,
+        textAlign: 'center',
     },
-    SecondaryButtonText: {
-        fontWeight: "bold",
-        fontSize: 16
-    }
+    signupText: {
+        color: '#c7d2f6',
+        fontSize: 14,
+        textAlign: 'center',
+    },
+    signupLink: {
+        color: '#4f46e5',
+        fontWeight: 'bold',
+        fontSize: 14,
+    },
 });
