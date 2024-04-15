@@ -10,6 +10,12 @@
         "name": "Bob",
         "latitude": 46.118954,
         "longitude": -70.671344
+      },
+      {
+        "id": "3",
+        "name": "Jean",
+        "latitude": 46.118954,
+        "longitude": -70.671400
       }
     ]
   }

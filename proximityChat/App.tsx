@@ -5,8 +5,10 @@ import TestScreen from './Screens/TestScreen';
 import ChatScreen from "./Screens/ChatScreen";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 
 export default function App() {
@@ -28,8 +30,11 @@ export default function App() {
     <stack.Screen name="Map" component={MapScreen}/>
     <stack.Screen name="Chat" component={ChatScreen}/>
     
-
       </stack.Navigator>
+      <Tab.Navigator>
+      <Tab.Screen name="Home" component={MapScreen} />
+      <Tab.Screen name="Settings" component={ChatScreen} />
+    </Tab.Navigator>
     </NavigationContainer>
     );
 }
