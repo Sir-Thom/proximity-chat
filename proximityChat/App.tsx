@@ -1,19 +1,22 @@
 import "react-native-gesture-handler";
 import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from "react";
 import MapScreen from './Screens/MapScreen';
 import TestScreen from './Screens/TestScreen';
 import ChatScreen from "./Screens/ChatScreen";
+import LoginScreen from './Screens/LoginScreen';
+import RegistrationScreen from './Screens/RegistrationScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const stack = createStackNavigator();
+import { firebase } from './firebaseconfig';
 
-
-export default function App() {
+function App() {
  // const [theme, setTheme] = useState<string>('');
   //const colorScheme = Appearance.getColorScheme();
   
- /* useEffect(() => {
+  /* useEffect(() => {
     if (colorScheme === 'dark') {
       setTheme(' bg-slate-800 ');
     } else {
@@ -21,17 +24,44 @@ export default function App() {
     }
   }, [colorScheme])*/
 
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  },[]);
+  
+  if (initializing) return null;
+
+  if (!user) {
+    return (
+      <stack.Navigator>
+        <stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>
+        <stack.Screen name="Register" component={RegistrationScreen} options={{headerShown:false}}/>
+      </stack.Navigator>
+    );
+  }
+
+  return (
+    <stack.Navigator>
+      <stack.Screen name="Map" component={MapScreen}/>
+      <stack.Screen name="Chat" component={ChatScreen}/>
+    </stack.Navigator>
+  );
+}
+
+export default () => {
   return (
     <NavigationContainer>
-      <stack.Navigator>
-  
-    <stack.Screen name="Map" component={MapScreen}/>
-    <stack.Screen name="Chat" component={ChatScreen}/>
-    
-
-      </stack.Navigator>
+      <App />
     </NavigationContainer>
-    );
+  );
 }
 
 const styles = StyleSheet.create({
