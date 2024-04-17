@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native';
 import React, {useState} from 'react'
+import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../firebaseconfig';
 
 export default function RegistrationPage() {
@@ -8,6 +9,7 @@ export default function RegistrationPage() {
     const [password, setPassword] = useState('');
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
+    const navigation = useNavigation();
 
     const registerUser = async (email, password, firstname, lastname) => {
     await firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -28,71 +30,135 @@ export default function RegistrationPage() {
 
     return (
     <View style={styles.container}>
-        <Text style={styles.titleText}>Register here</Text>
-        <View style={{marginTop:40}}>
-        <TextInput
-            style={styles.textInput}
-            placeholder= "First Name"
-            onChangeText={(text) => setFirstname(text)}
-        />
-        <TextInput
-            style={styles.textInput}
-            placeholder= "Last Name"
-            onChangeText={(text) => setLastname(text)}
-        />
-        <TextInput
-            style={styles.textInput}
-            placeholder= "Email"
-            keyboardType='email-address'
-            onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-            style={styles.textInput}
-            placeholder="Password"
-            secureTextEntry={true}
-            onChangeText={(text) => setPassword(text)}
-        />
+        <View style={styles.logoContainer}>
+                <Image
+                    style={styles.logo}
+                    source={require('../assets/icon-removebg.png')}
+                    alt="Your Company"
+                />
+                <Text style={styles.title}>Create a new account</Text>
+            </View>
+        <View style={styles.inputContainer}>
+            <Text style={styles.label}>First name</Text>
+            <TextInput
+                style={styles.input}
+                placeholder= "First Name"
+                autoCorrect={false}
+                placeholderTextColor={'#a3a3a3'}
+                onChangeText={(text) => setFirstname(text)}
+            />
+            <Text style={styles.label}>Last name</Text>
+            <TextInput
+                style={styles.input}
+                placeholder= "Last Name"
+                autoCorrect={false}
+                placeholderTextColor={'#a3a3a3'}
+                onChangeText={(text) => setLastname(text)}
+            />
+            <Text style={styles.label}>Email address</Text>
+            <TextInput
+                style={styles.input}
+                placeholder= "Email"
+                keyboardType='email-address'
+                autoCorrect={false}
+                placeholderTextColor={'#a3a3a3'}
+                onChangeText={(text) => setEmail(text)}
+            />
+            <Text style={styles.label}>Password</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Password"
+                autoCorrect={false}
+                secureTextEntry={true}
+                placeholderTextColor={'#a3a3a3'}
+                onChangeText={(text) => setPassword(text)}
+            />
         </View>
         <TouchableOpacity
-        style= {styles.button}
-        onPress={() => registerUser(email, password, firstname, lastname)}
-
+            style= {styles.button}
+            onPress={() => registerUser(email, password, firstname, lastname)}
         >
-        <Text style={{fontWeight: 'bold', fontSize: 22}}>Register</Text>
+            <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
+        <Text style={styles.signupText}>
+                Already a member?{' '}
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                    <Text style={styles.signupLink}>Login</Text>
+                </TouchableOpacity>
+            </Text>
     </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-    flex: 1,
-    alignItems: "center",
-    marginTop: 100,
-},
-textInput: {
-    paddingTop: 20,
-    paddingBottom: 10,
-    width: 250,
-    fontSize: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#000",
-    marginBottom: 10,
-    textAlign: "center"
-},
-titleText: {
-    fontSize: 26,
-    fontWeight: "bold",
-    marginLeft: 10,
-    marginTop: 10
-},
-button: {
-    marginTop: 50,
-    height: 70,
-    width: 250,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#10ABFF",
-    borderRadius: 50
-},
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingHorizontal: 20,
+        backgroundColor: '#1f2937',
+    },
+    logoContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    logo: {
+        width: 300,
+        height: 300,
+        marginBottom: 10,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#ffffff',
+    },
+    inputContainer: {
+        width: '100%',
+        marginBottom: 20,
+    },
+    label: {
+        color: '#ffffff',
+        fontSize: 16,
+        marginBottom: 5,
+    },
+    input: {
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        marginBottom: 10,
+        borderRadius: 10,
+        color: '#ffffff',
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    forgotPassword: {
+        color: '#4f46e5',
+        fontSize: 14,
+    },
+    button: {
+        backgroundColor: '#4f46e5',
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 30,
+        marginBottom: 10,
+    },
+    buttonText: {
+        color: '#ffffff',
+        fontWeight: 'bold',
+        fontSize: 18,
+        textAlign: 'center',
+    },
+    signupText: {
+        color: '#c7d2f6',
+        fontSize: 14,
+        textAlign: 'center',
+    },
+    signupLink: {
+        color: '#4f46e5',
+        fontWeight: 'bold',
+        fontSize: 14,
+    },
 });

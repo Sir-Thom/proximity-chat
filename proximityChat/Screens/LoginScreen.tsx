@@ -36,7 +36,9 @@ export default function LoginPage() {
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
+                    keyboardType='email-address'
                     autoCorrect={false}
+                    placeholderTextColor={'#a3a3a3'}
                     onChangeText={(text) => setEmail(text)}
                 />
                 <View style={styles.passwordContainer}>
@@ -50,6 +52,7 @@ export default function LoginPage() {
                     placeholder="Password"
                     autoCorrect={false}
                     secureTextEntry={true}
+                    placeholderTextColor={'#a3a3a3'}
                     onChangeText={(text) => setPassword(text)}
                 />
             </View>
