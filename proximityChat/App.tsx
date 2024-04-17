@@ -10,6 +10,23 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+function TabNavigator() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={StackNavigator} />
+      <Tab.Screen name="Chat" component={StackNavigator} />
+    </Tab.Navigator>
+  );
+}
+
+function StackNavigator() {
+  return (
+    <stack.Navigator>
+      <stack.Screen name="Chat" component={ChatScreen}/>
+      <stack.Screen name="Map" component={MapScreen}/>
+    </stack.Navigator>
+  );
+}
 
 export default function App() {
  // const [theme, setTheme] = useState<string>('');
@@ -24,18 +41,11 @@ export default function App() {
   }, [colorScheme])*/
 
   return (
+    <>
     <NavigationContainer>
-      <stack.Navigator>
-  
-    <stack.Screen name="Map" component={MapScreen}/>
-    <stack.Screen name="Chat" component={ChatScreen}/>
-    
-      </stack.Navigator>
-      <Tab.Navigator>
-      <Tab.Screen name="Home" component={MapScreen} />
-      <Tab.Screen name="Settings" component={ChatScreen} />
-    </Tab.Navigator>
+      <TabNavigator />
     </NavigationContainer>
+    </>
     );
 }
 

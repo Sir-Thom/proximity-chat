@@ -3,9 +3,12 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
 import data from './test.json';
 
 const stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const MapScreen = ({ navigation }) => {
   const [userLocation, setUserLocation] = useState(null);
