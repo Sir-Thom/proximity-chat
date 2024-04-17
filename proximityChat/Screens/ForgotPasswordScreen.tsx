@@ -95,15 +95,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         color: '#ffffff',
     },
-    passwordContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    forgotPassword: {
-        color: '#4f46e5',
-        fontSize: 14,
-    },
     button: {
         backgroundColor: '#4f46e5',
         paddingVertical: 15,

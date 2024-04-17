@@ -43,9 +43,9 @@ function App() {
   if (!user) {
     return (
       <stack.Navigator>
-        <stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>
-        <stack.Screen name="Register" component={RegistrationScreen} options={{headerShown:false}}/>
-        <stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown:false}}/>
+        <stack.Screen name="Login" component={LoginScreen} options={{headerShown:false, animationEnabled: false}}/>
+        <stack.Screen name="Register" component={RegistrationScreen} options={{headerShown:false, animationEnabled: false}}/>
+        <stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown:false, animationEnabled: false}}/>
       </stack.Navigator>
     );
   }
