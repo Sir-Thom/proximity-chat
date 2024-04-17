@@ -110,17 +110,6 @@ export default function ChatScreen(props) {
     setTheme(customTheme);
   }, [colorScheme]);
 
-  // useEffect(() => {
-
-  //   messageRef.on('child_added', (snapshot) => {
-  //     let message = snapshot.val();
-
-  //     if (message.author.id === user2.id) {
-  //       addMessage(message);
-  //     }
-  //   });
-  // }, [messageRef]);
-
   useEffect(() => {
     messageRef.once('value', (snapshot) => {
       const ref = snapshot.val();
@@ -139,6 +128,18 @@ export default function ChatScreen(props) {
       } while (message)
 
       setMessages(currentMessages);
+    });
+    
+    messageRef.on('value', (snapshot) => {
+      let message = snapshot.val() as Message;
+      if (messages.map((m: Message) => m.id).includes(messages[0]?.id ?? '') || (message?.author?.id ?? '') === user.id) {
+        console.log("nice");
+        return;
+      }
+
+      if (message.author.id === user2.id && message.parentid === (messages[0]?.id ?? '')) {
+        addMessage(message);
+      }
     });
   }, []);
 
