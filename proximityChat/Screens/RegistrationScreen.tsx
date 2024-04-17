@@ -78,14 +78,14 @@ export default function RegistrationPage() {
             style= {styles.button}
             onPress={() => registerUser(email, password, firstname, lastname)}
         >
-            <Text style={styles.buttonText}>Register</Text>
+        <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
-        <Text style={styles.signupText}>
-                Already a member?{' '}
-                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                    <Text style={styles.signupLink}>Login</Text>
-                </TouchableOpacity>
-            </Text>
+        <View style={styles.signinContainer}>
+            <Text style={styles.signinText}>Already a member? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.signinLink}>Login</Text>
+            </TouchableOpacity>
+        </View>
     </View>
     );
 }
@@ -129,15 +129,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         color: '#ffffff',
     },
-    passwordContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    forgotPassword: {
-        color: '#4f46e5',
-        fontSize: 14,
-    },
     button: {
         backgroundColor: '#4f46e5',
         paddingVertical: 15,
@@ -151,12 +142,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
     },
-    signupText: {
+    signinContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    signinText: {
         color: '#c7d2f6',
         fontSize: 14,
         textAlign: 'center',
     },
-    signupLink: {
+    signinLink: {
         color: '#4f46e5',
         fontWeight: 'bold',
         fontSize: 14,
