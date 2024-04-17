@@ -3,9 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar }
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../firebaseconfig';
 
-export default function LoginPage() {
+export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const navigation = useNavigation();
 
     const loginUser = async (email, password) => {
@@ -14,10 +13,6 @@ export default function LoginPage() {
         } catch (error) {
             console.error("Erreur de connexion:", error.message);
         }
-    }
-
-    const handleForgotPassword = () => {
-        
     }
 
     return (
@@ -29,7 +24,7 @@ export default function LoginPage() {
                     source={require('../assets/icon-removebg.png')}
                     alt="Your Company"
                 />
-                <Text style={styles.title}>Sign in to your account</Text>
+                <Text style={styles.title}>Reset your account password</Text>
             </View>
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Email address</Text>
@@ -41,33 +36,26 @@ export default function LoginPage() {
                     placeholderTextColor={'#a3a3a3'}
                     onChangeText={(text) => setEmail(text)}
                 />
-                <View style={styles.passwordContainer}>
-                    <Text style={styles.label}>Password</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-                        <Text style={styles.forgotPassword}>Forgot password?</Text>
-                    </TouchableOpacity>
-                </View>
+                <Text style={styles.label}>Password</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
                     autoCorrect={false}
                     secureTextEntry={true}
                     placeholderTextColor={'#a3a3a3'}
-                    onChangeText={(text) => setPassword(text)}
                 />
             </View>
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => loginUser(email, password)}
             >
-                <Text style={styles.buttonText}>Sign in</Text>
+                <Text style={styles.buttonText}>Reset password</Text>
             </TouchableOpacity>
-            <View style={styles.signupContainer}>
-                <Text style={styles.signupText}>Not a member? </Text>
+            <Text style={styles.signupText}>
+                Not a member?{' '}
                 <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                     <Text style={styles.signupLink}>Register</Text>
                 </TouchableOpacity>
-            </View>
+            </Text>
         </View>
     );
 }
@@ -133,13 +121,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
     },
-    signupContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
     signupText: {
-        color: '#ffffff',
+        color: '#c7d2f6',
         fontSize: 14,
         textAlign: 'center',
     },
