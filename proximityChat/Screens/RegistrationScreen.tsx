@@ -12,20 +12,20 @@ export default function RegistrationPage() {
     const navigation = useNavigation();
 
     const registerUser = async (email, password, firstname, lastname) => {
-    await firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(() => {
-        firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
-        email,
-        firstname,
-        lastname
-        })
+        await firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(() => {
-        firebase.auth().currentUser.sendEmailVerification({handleCodeInApp: true, url: 'http://democours-4fc4e.firebaseapp.com'})
+            firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
+            email,
+            firstname,
+            lastname
+            })
+            .then(() => {
+            firebase.auth().currentUser.sendEmailVerification({handleCodeInApp: true, url: 'http://democours-4fc4e.firebaseapp.com'})
+            })
+            .catch((error) => {
+            console.log(error)
+            })
         })
-        .catch((error) => {
-        console.log(error)
-        })
-    })
     }
 
     return (

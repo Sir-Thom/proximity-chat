@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar, Alert, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../firebaseconfig';
 
@@ -19,44 +19,53 @@ export default function ForgotPasswordPage() {
     }
 
     return (
-        <View style={styles.container}>
-            <StatusBar backgroundColor="#1f2937"/>
-            <View style={styles.logoContainer}>
-                <Image
-                    style={styles.logo}
-                    source={require('../assets/icon-removebg.png')}
-                    alt="Your Company"
-                />
-                <Text style={styles.title}>Reset your account password</Text>
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Email address</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    keyboardType='email-address'
-                    autoCorrect={false}
-                    placeholderTextColor={'#a3a3a3'}
-                    onChangeText={(text) => setEmail(text)}
-                />
-            </View>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => resetPassword(email)}
-            >
-            <Text style={styles.buttonText}>Reset password</Text>
-            </TouchableOpacity>
-            <View style={styles.signupContainer}>
-                <Text style={styles.signupText}>Not a member? </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                    <Text style={styles.signupLink}>Register</Text>
+        <ScrollView contentContainerStyle={styles.scrollViewContainer} 
+            automaticallyAdjustContentInsets={true}
+            automaticallyAdjustKeyboardInsets={true}
+            bounces={false}>
+            <View style={styles.container}>
+                <StatusBar backgroundColor="#1f2937"/>
+                <View style={styles.logoContainer}>
+                    <Image
+                        style={styles.logo}
+                        source={require('../assets/icon-removebg.png')}
+                        alt="Your Company"
+                    />
+                    <Text style={styles.title}>Reset your account password</Text>
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>Email address</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Email"
+                        keyboardType='email-address'
+                        autoCorrect={false}
+                        placeholderTextColor={'#a3a3a3'}
+                        onChangeText={(text) => setEmail(text)}
+                    />
+                </View>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => resetPassword(email)}
+                >
+                <Text style={styles.buttonText}>Reset password</Text>
                 </TouchableOpacity>
+                <View style={styles.signupContainer}>
+                    <Text style={styles.signupText}>Not a member? </Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                        <Text style={styles.signupLink}>Register</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
+    scrollViewContainer: {
+        flexGrow: 1,
+        backgroundColor: '#1f2937'
+    },
     container: {
         flex: 1,
         alignItems: 'center',
