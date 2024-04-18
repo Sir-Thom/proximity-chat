@@ -33,12 +33,6 @@ export default function ChatScreen(props) {
   const colorScheme = Appearance.getColorScheme();
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 
-  function addMessage(message: MessageType.Any) {
-    let tempMessages = [message, ...messages];
-    setMessages(tempMessages);
-    conversation.child('messages').set(tempMessages);
-  }
-
   function handleSendPress(message: MessageType.PartialText) {
     const textMessage: MessageType.Text = {
       author: user,
@@ -47,7 +41,7 @@ export default function ChatScreen(props) {
       text: message.text,
       type: 'text',
     }
-    addMessage(textMessage)
+    conversation.child('messages').push(textMessage);
   }
 
   async function handleImageSelection() {
@@ -71,7 +65,7 @@ export default function ChatScreen(props) {
       width: response.width,
     }
 
-    addMessage(imageMessage);
+    conversation.child('messages').push(imageMessage);
   }
 
   function handlePreviewDataFetched({
@@ -123,7 +117,7 @@ export default function ChatScreen(props) {
     setConversation(tempConversation);
     
     tempConversation.child('messages').on('value', (snapshot) => {
-      setMessages(snapshot.val() ?? []);
+      setMessages(Object.entries(snapshot.val() ?? {})?.map(x => x[1]).reverse().splice(0, 50) as MessageType.Any[] ?? []);
     });
   }, []);
 
