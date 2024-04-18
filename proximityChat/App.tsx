@@ -10,21 +10,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function TabNavigator() {
+function MyTabs() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={StackNavigator} />
-      <Tab.Screen name="Chat" component={StackNavigator} />
-    </Tab.Navigator>
-  );
-}
-
-function StackNavigator() {
-  return (
-    <stack.Navigator>
-      <stack.Screen name="Chat" component={ChatScreen}/>
-      <stack.Screen name="Map" component={MapScreen}/>
-    </stack.Navigator>
+      <Tab.Navigator>
+        <Tab.Screen name="Map" component={MapScreen} />
+        <Tab.Screen name="Chat" component={ChatScreen} />
+      </Tab.Navigator>
   );
 }
 
@@ -43,7 +34,17 @@ export default function App() {
   return (
     <>
     <NavigationContainer>
-      <TabNavigator />
+      <stack.Navigator>
+    
+        <stack.Screen
+          name="MyTabs"
+          component={MyTabs}
+          options={{ headerShown: false }}
+        />
+        <stack.Screen name="Map" component={MapScreen}/>
+        <stack.Screen name="Chat" component={ChatScreen}/>
+  
+      </stack.Navigator>
     </NavigationContainer>
     </>
     );
