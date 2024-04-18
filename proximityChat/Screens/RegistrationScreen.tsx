@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image, ScrollView } from 'react-native';
 import React, {useState} from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../firebaseconfig';
@@ -29,68 +29,77 @@ export default function RegistrationPage() {
     }
 
     return (
-    <View style={styles.container}>
-        <View style={styles.logoContainer}>
-                <Image
-                    style={styles.logo}
-                    source={require('../assets/icon-removebg.png')}
-                    alt="Your Company"
-                />
-                <Text style={styles.title}>Create a new account</Text>
+        <ScrollView contentContainerStyle={styles.scrollViewContainer} 
+            automaticallyAdjustContentInsets={true}
+            automaticallyAdjustKeyboardInsets={true}
+            bounces={false}>
+            <View style={styles.container}>
+                <View style={styles.logoContainer}>
+                        <Image
+                            style={styles.logo}
+                            source={require('../assets/icon-removebg.png')}
+                            alt="Your Company"
+                        />
+                        <Text style={styles.title}>Create a new account</Text>
+                    </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>First name</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder= "First Name"
+                        autoCorrect={false}
+                        placeholderTextColor={'#a3a3a3'}
+                        onChangeText={(text) => setFirstname(text)}
+                    />
+                    <Text style={styles.label}>Last name</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder= "Last Name"
+                        autoCorrect={false}
+                        placeholderTextColor={'#a3a3a3'}
+                        onChangeText={(text) => setLastname(text)}
+                    />
+                    <Text style={styles.label}>Email address</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder= "Email"
+                        keyboardType='email-address'
+                        autoCorrect={false}
+                        placeholderTextColor={'#a3a3a3'}
+                        onChangeText={(text) => setEmail(text)}
+                    />
+                    <Text style={styles.label}>Password</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Password"
+                        autoCorrect={false}
+                        secureTextEntry={true}
+                        placeholderTextColor={'#a3a3a3'}
+                        onChangeText={(text) => setPassword(text)}
+                    />
+                </View>
+                <TouchableOpacity
+                    style= {styles.button}
+                    onPress={() => registerUser(email, password, firstname, lastname)}
+                >
+                <Text style={styles.buttonText}>Register</Text>
+                </TouchableOpacity>
+                <View style={styles.signinContainer}>
+                    <Text style={styles.signinText}>Already a member? </Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                        <Text style={styles.signinLink}>Login</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        <View style={styles.inputContainer}>
-            <Text style={styles.label}>First name</Text>
-            <TextInput
-                style={styles.input}
-                placeholder= "First Name"
-                autoCorrect={false}
-                placeholderTextColor={'#a3a3a3'}
-                onChangeText={(text) => setFirstname(text)}
-            />
-            <Text style={styles.label}>Last name</Text>
-            <TextInput
-                style={styles.input}
-                placeholder= "Last Name"
-                autoCorrect={false}
-                placeholderTextColor={'#a3a3a3'}
-                onChangeText={(text) => setLastname(text)}
-            />
-            <Text style={styles.label}>Email address</Text>
-            <TextInput
-                style={styles.input}
-                placeholder= "Email"
-                keyboardType='email-address'
-                autoCorrect={false}
-                placeholderTextColor={'#a3a3a3'}
-                onChangeText={(text) => setEmail(text)}
-            />
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                autoCorrect={false}
-                secureTextEntry={true}
-                placeholderTextColor={'#a3a3a3'}
-                onChangeText={(text) => setPassword(text)}
-            />
-        </View>
-        <TouchableOpacity
-            style= {styles.button}
-            onPress={() => registerUser(email, password, firstname, lastname)}
-        >
-        <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
-        <View style={styles.signinContainer}>
-            <Text style={styles.signinText}>Already a member? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text style={styles.signinLink}>Login</Text>
-            </TouchableOpacity>
-        </View>
-    </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
+    scrollViewContainer: {
+        flexGrow: 1,
+        backgroundColor: '#1f2937'
+    },
     container: {
         flex: 1,
         alignItems: 'center',
