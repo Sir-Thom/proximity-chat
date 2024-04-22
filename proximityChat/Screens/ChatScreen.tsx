@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Children, useEffect, useState } from 'react';
 import { Appearance, View } from 'react-native';
 import { Chat, MessageType, defaultTheme, darkTheme, Theme } from '@flyerhq/react-native-chat-ui';
 import { PreviewData } from '@flyerhq/react-native-link-preview';
@@ -6,10 +6,15 @@ import * as ImagePicker from 'expo-image-picker';
 import Guid from 'guid';
 import { firebase } from '../firebaseconfig';
 
-type Message = MessageType.Any & {
-  parentid: string;
-  fromuserid: string;
-  touserid: string;
+// type Message = MessageType.Any & {
+//   parentid: string;
+//   fromuserid: string;
+//   touserid: string;
+// }
+
+type Conversation = {
+  id: string;
+  messages: MessageType.Any[];
 }
 
 export default function ChatScreen(props) {
@@ -21,22 +26,12 @@ export default function ChatScreen(props) {
   }, [navigation]);
   const user = { id: '06c33e8b-e835-4736-80f4-63f44b66666c' } // TODO: user par firebase
   const user2 = { id: '06c33e8b-e835-4736-80f4-63f34b66436c' } // TODO: user par firebase
-  const [messages, setMessages] = useState<MessageType.Any[]>([]) // TODO: messages par firebase
-  const messageRef = firebase.database().ref('messages');
+  const conversationId = '-Nvg859t0oCTofwyZXGu'
+  const [conversation, setConversation] = useState<firebase.database.Reference>();
+  const [messages, setMessages] = useState<MessageType.Any[]>([]); // TODO: messages par firebase
 
   const colorScheme = Appearance.getColorScheme();
   const [theme, setTheme] = useState<Theme>(defaultTheme);
-
-  function addMessage(message: MessageType.Any) {
-    messageRef.push({
-      ...message,
-      parentid: messages[0]?.id ?? '',
-      fromuserid: user.id,
-      touserid: user2.id,
-    })
-
-    setMessages([message, ...messages]);
-  }
 
   function handleSendPress(message: MessageType.PartialText) {
     const textMessage: MessageType.Text = {
@@ -46,7 +41,7 @@ export default function ChatScreen(props) {
       text: message.text,
       type: 'text',
     }
-    addMessage(textMessage)
+    conversation.child('messages').push(textMessage);
   }
 
   async function handleImageSelection() {
@@ -70,7 +65,7 @@ export default function ChatScreen(props) {
       width: response.width,
     }
 
-    addMessage(imageMessage);
+    conversation.child('messages').push(imageMessage);
   }
 
   function handlePreviewDataFetched({
@@ -110,35 +105,19 @@ export default function ChatScreen(props) {
     setTheme(customTheme);
   }, [colorScheme]);
 
-  // useEffect(() => {
-
-  //   messageRef.on('child_added', (snapshot) => {
-  //     let message = snapshot.val();
-
-  //     if (message.author.id === user2.id) {
-  //       addMessage(message);
-  //     }
-  //   });
-  // }, [messageRef]);
-
   useEffect(() => {
-    messageRef.once('value', (snapshot) => {
-      const ref = snapshot.val();
-      if (!ref) return;
+    let tempConversation: firebase.database.Reference;
+    const conversationRef = firebase.database().ref('conversations');
+    if (conversationId) {
+      tempConversation = conversationRef.child(conversationId);
+    } else {
+      tempConversation = conversationRef.push({ messages: [] });
+    }
 
-      const firebaseMessages = Object.entries(ref).map(x => x[1]) as Message[];
-      let currentMessages = []
-
-      let message: Message;
-      do {
-        message = firebaseMessages.find((m) => m.parentid === (message?.id ?? '')
-        && ((m.fromuserid === user2.id && m.touserid === user.id)
-        || (m.fromuserid === user.id && m.touserid === user2.id)));
-        if (!message) break;
-        currentMessages = [message as MessageType.Any, ...currentMessages]
-      } while (message)
-
-      setMessages(currentMessages);
+    setConversation(tempConversation);
+    
+    tempConversation.child('messages').on('value', (snapshot) => {
+      setMessages(Object.entries(snapshot.val() ?? {})?.map(x => x[1]).reverse().splice(0, 50) as MessageType.Any[] ?? []);
     });
   }, []);
 
@@ -154,6 +133,7 @@ export default function ChatScreen(props) {
     />
   )
 }
+
 ChatScreen.navigationOptions = ({ route }) => ({
   title: route.params.name, // Set the header title to the user name
   headerTitle: route.params.name, // Set the screen name to the user name
