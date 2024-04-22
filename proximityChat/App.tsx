@@ -6,11 +6,20 @@ import TestScreen from './Screens/TestScreen';
 import ChatScreen from "./Screens/ChatScreen";
 import LoginScreen from './Screens/LoginScreen';
 import RegistrationScreen from './Screens/RegistrationScreen';
-import { NavigationContainer } from '@react-navigation/native';
+import ForgotPasswordScreen from "./Screens/ForgotPasswordScreen";
+import { NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const stack = createStackNavigator();
 import { firebase } from './firebaseconfig';
+
+const NavigationTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#1f2937'
+  },
+};
 
 function App() {
  // const [theme, setTheme] = useState<string>('');
@@ -42,8 +51,9 @@ function App() {
   if (!user) {
     return (
       <stack.Navigator>
-        <stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>
-        <stack.Screen name="Register" component={RegistrationScreen} options={{headerShown:false}}/>
+        <stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+        <stack.Screen name="Register" component={RegistrationScreen} options={{headerShown: false}}/>
+        <stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown: false}}/>
       </stack.Navigator>
     );
   }
@@ -58,7 +68,7 @@ function App() {
 
 export default () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={NavigationTheme}>
       <App />
     </NavigationContainer>
   );
