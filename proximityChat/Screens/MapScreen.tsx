@@ -1,25 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import * as Location from 'expo-location';
-import MapView, { Marker } from 'react-native-maps';
-import { createStackNavigator } from '@react-navigation/stack';
-import data from './test.json';
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, Dimensions } from "react-native";
+import * as Location from "expo-location";
+import MapView, { Marker } from "react-native-maps";
+import { createStackNavigator } from "@react-navigation/stack";
+import { HandleLocataionUpdate, GetLocation } from "../utils/LocationsUtils";
+import { getUserFirstnameById } from "../utils/GetUser";
+import firebase from "firebase/compat";
 
-const stack = createStackNavigator();
+// Function to calculate the distance between two coordinates using Haversine formula
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371; // Radius of the Earth in km
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in km
+  return distance;
+};
 
 const MapScreen = ({ navigation }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [nearbyUsers, setNearbyUsers] = useState([]);
 
   useEffect(() => {
-    setNearbyUsers(data.users);
+    (async () => {
+      const location = await GetLocation();
+      if (location) {
+        setNearbyUsers(location);
+      }
+    })();
   }, []);
 
   useEffect(() => {
-    const getLocation = async () => {
+    (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission to access location was denied');
+      if (status !== "granted") {
+        alert("Permission to access location was denied");
         return;
       }
 
@@ -29,19 +50,8 @@ const MapScreen = ({ navigation }) => {
         longitude: location.coords.longitude,
       });
 
-      Location.watchPositionAsync({}, (location) => {
-        setUserLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-      });
-    };
-
-    getLocation();
-
-    return () => {
-      Location.stopLocationUpdatesAsync('taskName');
-    };
+      HandleLocataionUpdate();
+    })();
   }, []);
 
   return (
@@ -56,15 +66,32 @@ const MapScreen = ({ navigation }) => {
             longitudeDelta: 0.03,
           }}
         >
-          <Marker coordinate={userLocation} title="You" />
-          {nearbyUsers.map(user => (
-            <Marker
-              key={user.id}
-              coordinate={{ latitude: parseFloat(user.latitude), longitude: parseFloat(user.longitude) }}
-              title={user.name}
-              onPress={() => navigation.navigate("Chat", { name: user.name })}
-            />
-          ))}
+          {nearbyUsers.map((user) => {
+            if (
+              user.userid !== firebase.auth().currentUser.uid &&
+              calculateDistance(
+                user.latitude,
+                user.longitude,
+                userLocation.latitude,
+                userLocation.longitude
+              ) <= 100
+            ) {
+              return (
+                <Marker
+                  key={user.id + user.userid}
+                  coordinate={{
+                    latitude: parseFloat(user.latitude),
+                    longitude: parseFloat(user.longitude),
+                  }}
+                  onPress={async () => {
+                    const firstName = await getUserFirstnameById(user.userid);
+                    navigation.navigate("Chat", { name: firstName });
+                  }}
+                />
+              );
+            }
+            return null;
+          })}
         </MapView>
       )}
     </View>
@@ -80,10 +107,9 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
 export default MapScreen;
-

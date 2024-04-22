@@ -158,6 +158,10 @@ ChatScreen.navigationOptions = ({ route }) => ({
   title: route.params.name, // Set the header title to the user name
   headerTitle: route.params.name, // Set the screen name to the user name
   headerStyle: {
-      backgroundColor: '#f4511e',
-    },
+    backgroundColor: 'blue', // Change header background color here
+  },
+  headerTintColor: 'white', // Change text color of header title
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
 });
