@@ -4,6 +4,7 @@ import { Chat, MessageType, defaultTheme, darkTheme, Theme } from '@flyerhq/reac
 import { PreviewData } from '@flyerhq/react-native-link-preview';
 import * as ImagePicker from 'expo-image-picker';
 import Guid from 'guid';
+import { firebase } from "../firebaseconfig";
 
 export default function ChatScreen(props) {
   const { navigation } = props;
@@ -29,6 +30,10 @@ export default function ChatScreen(props) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   function addMessage(message: MessageType.Any) {
+    if(messages == null)
+    {
+      
+    }
     setMessages([message, ...messages]);
   }
 

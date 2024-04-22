@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import MapScreen from './Screens/MapScreen';
 import TestScreen from './Screens/TestScreen';
 import ChatScreen from "./Screens/ChatScreen";
+import ChatsScreen from "./Screens/ChatsScreen";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -14,7 +15,7 @@ function MyTabs() {
   return (
       <Tab.Navigator>
         <Tab.Screen name="Map" component={MapScreen} />
-        <Tab.Screen name="Chat" component={ChatScreen} />
+        <Tab.Screen name="Chats" component={ChatsScreen} />
       </Tab.Navigator>
   );
 }
