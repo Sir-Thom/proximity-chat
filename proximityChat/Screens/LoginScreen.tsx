@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar, ScrollView} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar, ScrollView, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../firebaseconfig';
 
@@ -9,10 +9,16 @@ export default function LoginPage() {
     const navigation = useNavigation();
 
     const loginUser = async (email, password) => {
-        try {
-            await firebase.auth().signInWithEmailAndPassword(email, password);
-        } catch (error) {
-            alert("Email address or password is incorrect. Please try again.");
+        if (email === '' || password === '') {
+            Alert.alert('Invalid input', 'Please fill in all fields.');
+            return;
+        }
+        else{
+            try {
+                await firebase.auth().signInWithEmailAndPassword(email, password);
+            } catch (error) {
+                Alert.alert("Login fail", "Email address or password is incorrect. Please try again.");
+            }
         }
     }
 

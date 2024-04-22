@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image, ScrollView, Alert } from 'react-native';
 import React, {useState} from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { firebase } from '../firebaseconfig';
@@ -12,20 +12,35 @@ export default function RegistrationPage() {
     const navigation = useNavigation();
 
     const registerUser = async (email, password, firstname, lastname) => {
-        await firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(() => {
-            firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
-            email,
-            firstname,
-            lastname
-            })
-            .then(() => {
-            firebase.auth().currentUser.sendEmailVerification({handleCodeInApp: true, url: 'http://democours-4fc4e.firebaseapp.com'})
-            })
-            .catch((error) => {
-            console.log(error)
-            })
-        })
+        if (email === '' || password === '' || firstname === '' || lastname === '') {
+            Alert.alert('Invalid input', 'Please fill in all fields.');
+            return;
+        }
+        else {
+            try{
+                await firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
+                    email,
+                    firstname,
+                    lastname
+                    })
+                    .then(() => {
+                    firebase.auth().currentUser.sendEmailVerification({handleCodeInApp: true, url: 'http://democours-4fc4e.firebaseapp.com'})
+                    })
+                    .catch((error) => {
+                    console.log(error)
+                    })
+                })
+            } catch (error) {
+                if (error.code === 'auth/invalid-email') {
+                    Alert.alert('Badly formatted email', 'Please enter a valid email address.');
+                }
+                else if (error.code === 'auth/weak-password') {
+                    Alert.alert('Weak password', 'Please enter a stronger password. (Minimum 6 characters)');
+                }
+            }
+        }
     }
 
     return (

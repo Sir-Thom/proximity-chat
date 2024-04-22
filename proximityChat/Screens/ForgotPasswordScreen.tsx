@@ -11,10 +11,14 @@ export default function ForgotPasswordPage() {
         try {
             await firebase.auth().sendPasswordResetEmail(email)
             .then(() => {
-                Alert.alert('Email envoyé', 'Un email de réinitialisation de mot de passe a été envoyé à votre adresse email.');
+                Alert.alert('Email send', 'If the email address is valid, you will receive an email with instructions to reset your password.');
             })
         } catch (error) {
-            console.error("Erreur de connexion:", error.message);
+            if (error.code === 'auth/invalid-email') {
+                Alert.alert('Badly formatted email', 'Please enter a valid email address.');
+            }
+            else
+            Alert.alert('Invalid email', 'Please enter a valid email address.');
         }
     }
 
