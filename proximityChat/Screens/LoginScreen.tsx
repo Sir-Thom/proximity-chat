@@ -69,10 +69,10 @@ export default function LoginPage() {
                 >
                     <Text style={styles.buttonText}>Sign in</Text>
                 </TouchableOpacity>
-                <View style={styles.signUIContainer}>
-                    <Text style={styles.signUIText}>Not a member? </Text>
+                <View style={styles.authContainer}>
+                    <Text style={styles.authText}>Not a member? </Text>
                     <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                        <Text style={styles.signUILink}>Register</Text>
+                        <Text style={styles.authLink}>Register</Text>
                     </TouchableOpacity>
                 </View>
             </View>
