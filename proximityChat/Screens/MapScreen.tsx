@@ -5,7 +5,6 @@ import MapView, { Marker } from "react-native-maps";
 import { HandleLocataionUpdate, GetLocation } from "../utils/LocationsUtils";
 import { getUserFirstnameById } from "../utils/GetUser";
 import firebase from "firebase/compat";
-import { MapDarktheme } from "../utils/mapStyle/DarkThemeMap";
 import { GTAMapStyle } from "../utils/mapStyle/GTAMapStyle";
 
 
@@ -66,6 +65,7 @@ const MapScreen = ({ navigation }) => {
 
         showsCompass={true}
           style={styles.map}
+          
           initialRegion={{
             latitude: userLocation.latitude,
             longitude: userLocation.longitude,
@@ -90,6 +90,8 @@ const MapScreen = ({ navigation }) => {
                     latitude: parseFloat(user.latitude),
                     longitude: parseFloat(user.longitude),
                   }}
+                  icon={require("../assets/marker.png")}
+                  resizeMode="contain"
                   onPress={async () => {
                     const firstName = await getUserFirstnameById(user.userid);
                     navigation.navigate("Chat", { name: firstName });
