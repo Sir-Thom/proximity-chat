@@ -49,7 +49,7 @@ export default function LoginPage() {
                     />
                     <View style={styles.passwordContainer}>
                         <Text style={styles.label}>Password</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword' as never)}>
                             <Text style={styles.forgotPassword}>Forgot password?</Text>
                         </TouchableOpacity>
                     </View>
@@ -70,7 +70,7 @@ export default function LoginPage() {
                 </TouchableOpacity>
                 <View style={styles.signupContainer}>
                     <Text style={styles.signupText}>Not a member? </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Register' as never)}>
                         <Text style={styles.signupLink}>Register</Text>
                     </TouchableOpacity>
                 </View>

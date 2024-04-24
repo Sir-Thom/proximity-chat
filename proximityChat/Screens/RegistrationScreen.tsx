@@ -101,7 +101,7 @@ export default function RegistrationPage() {
                 </TouchableOpacity>
                 <View style={styles.signinContainer}>
                     <Text style={styles.signinText}>Already a member? </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Login' as never)}>
                         <Text style={styles.signinLink}>Login</Text>
                     </TouchableOpacity>
                 </View>

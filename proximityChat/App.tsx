@@ -13,14 +13,6 @@ const stack = createStackNavigator();
 import { firebase } from './firebaseconfig';
 import { DarkHeaderTheme } from "./utils/themeDarkHeader";
 
-const NavigationTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: '#1f2937'
-  },
-};
-
 function App() {
  // const [theme, setTheme] = useState<string>('');
   //const colorScheme = Appearance.getColorScheme();
@@ -70,7 +62,6 @@ function App() {
 export default () => {
   
   const scheme = useColorScheme();
-  console.log(scheme);
   return (
     <NavigationContainer theme={scheme === 'dark' ? DarkHeaderTheme : DarkHeaderTheme}>
       <StatusBar barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
@@ -79,17 +70,4 @@ export default () => {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-  {/*  <View className={`flex-1 justify-center items-centered ${theme}`}>
-      <StatusBar style="auto" />
-    </View>
-  );
-}*/}
 
