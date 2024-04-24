@@ -5,6 +5,8 @@ import { PreviewData } from '@flyerhq/react-native-link-preview';
 import * as ImagePicker from 'expo-image-picker';
 import Guid from 'guid';
 import { firebase } from '../firebaseconfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 // type Message = MessageType.Any & {
 //   parentid: string;
@@ -122,6 +124,7 @@ export default function ChatScreen(props) {
   }, []);
 
   return (
+ 
     <Chat
       messages={messages}
       user={user}
@@ -131,17 +134,12 @@ export default function ChatScreen(props) {
       onPreviewDataFetched={handlePreviewDataFetched}
       showUserAvatars={true}
     />
+
   )
 }
 
 ChatScreen.navigationOptions = ({ route }) => ({
   title: route.params.name, // Set the header title to the user name
   headerTitle: route.params.name, // Set the screen name to the user name
-  headerStyle: {
-    backgroundColor: 'blue', // Change header background color here
-  },
-  headerTintColor: 'white', // Change text color of header title
-  headerTitleStyle: {
-    fontWeight: 'bold',
-  },
+  backgroundColor: '#000000',
 });
