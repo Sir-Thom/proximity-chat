@@ -50,7 +50,7 @@ export default function LoginPage() {
                     />
                     <View style={styles.passwordContainer}>
                         <Text style={styles.label}>Password</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword' as never)}>
                             <Text style={styles.forgotPassword}>Forgot password?</Text>
                         </TouchableOpacity>
                     </View>
