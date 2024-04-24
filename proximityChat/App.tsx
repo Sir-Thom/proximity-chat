@@ -9,8 +9,11 @@ import RegistrationScreen from './Screens/RegistrationScreen';
 import ForgotPasswordScreen from "./Screens/ForgotPasswordScreen";
 import { NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ChatsScreen from "./Screens/ChatsScreen";
 
 const stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 import { firebase } from './firebaseconfig';
 
 const NavigationTheme = {
@@ -20,6 +23,15 @@ const NavigationTheme = {
     background: '#1f2937'
   },
 };
+
+function MyTabs() {
+  return (
+      <Tab.Navigator>
+        <Tab.Screen name="Map" component={MapScreen} />
+        <Tab.Screen name="Chats" component={ChatsScreen} />
+      </Tab.Navigator>
+  );
+}
 
 function App() {
  // const [theme, setTheme] = useState<string>('');
@@ -60,6 +72,11 @@ function App() {
 
   return (
     <stack.Navigator>
+      <stack.Screen
+          name="MyTabs"
+          component={MyTabs}
+          options={{ headerShown: false }}
+        />
       <stack.Screen name="Map" component={MapScreen}/>
       <stack.Screen name="Chat" component={ChatScreen}/>
     </stack.Navigator>
