@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
                 </TouchableOpacity>
                 <View style={styles.signupContainer}>
                     <Text style={styles.signupText}>Not a member? </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Register' as never)}>
                         <Text style={styles.signupLink}>Register</Text>
                     </TouchableOpacity>
                 </View>

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import * as Location from "expo-location";
 import MapView, { Marker } from "react-native-maps";
-import { createStackNavigator } from "@react-navigation/stack";
 import { HandleLocataionUpdate, GetLocation } from "../utils/LocationsUtils";
 import { getUserFirstnameById } from "../utils/GetUser";
 import firebase from "firebase/compat";
+import { MapDarktheme } from "../utils/mapStyle/DarkThemeMap";
+import { GTAMapStyle } from "../utils/mapStyle/GTAMapStyle";
+
 
 // Function to calculate the distance between two coordinates using Haversine formula
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -56,8 +58,13 @@ const MapScreen = ({ navigation }) => {
 
   return (
     <View style={styles.view}>
+      
       {userLocation && (
         <MapView
+        // check if the user has dark mode enabled
+          customMapStyle={GTAMapStyle}
+
+        showsCompass={true}
           style={styles.map}
           initialRegion={{
             latitude: userLocation.latitude,
@@ -93,7 +100,9 @@ const MapScreen = ({ navigation }) => {
             return null;
           })}
         </MapView>
+
       )}
+  
     </View>
   );
 };
