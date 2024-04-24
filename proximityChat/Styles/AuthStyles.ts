@@ -12,11 +12,11 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 20,
         backgroundColor: '#1f2937',
     },
-    logoContainer: {
+    imageContainer: {
         alignItems: 'center',
         marginBottom: 20,
     },
-    logo: {
+    image: {
         width: 300,
         height: 300,
         marginBottom: 10,

@@ -7,6 +7,7 @@ import ChatScreen from "./Screens/ChatScreen";
 import LoginScreen from './Screens/LoginScreen';
 import RegistrationScreen from './Screens/RegistrationScreen';
 import ForgotPasswordScreen from "./Screens/ForgotPasswordScreen";
+import RegisterProfilePicture from "./Screens/RegisterProfilePictureScreen";
 import { NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -53,6 +54,7 @@ function App() {
       <stack.Navigator>
         <stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
         <stack.Screen name="Register" component={RegistrationScreen} options={{headerShown: false}}/>
+        <stack.Screen name="ProfilePicture" component={RegisterProfilePicture} options={{headerShown: false}}/>
         <stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown: false}}/>
       </stack.Navigator>
     );

@@ -30,9 +30,9 @@ export default function LoginPage() {
             bounces={false}>
             <View style={styles.container}>
                 <StatusBar backgroundColor="#1f2937"/>
-                <View style={styles.logoContainer}>
+                <View style={styles.imageContainer}>
                     <Image
-                        style={styles.logo}
+                        style={styles.image}
                         source={require('../assets/icon-removebg.png')}
                         alt="Your Company"
                     />

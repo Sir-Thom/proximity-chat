@@ -12,6 +12,13 @@ export default function RegistrationPage() {
     const [lastname, setLastname] = useState('');
     const navigation = useNavigation();
 
+    const sendData = {
+        email: email,
+        password: password,
+        firstname: firstname,
+        lastname: lastname
+    }
+
     const registerUser = async (email, password, firstname, lastname) => {
         if (email === '' || password === '' || firstname === '' || lastname === '') {
             Alert.alert('Invalid input', 'Please fill in all fields.');
@@ -50,14 +57,13 @@ export default function RegistrationPage() {
             automaticallyAdjustKeyboardInsets={true}
             bounces={false}>
             <View style={styles.container}>
-                <View style={styles.logoContainer}>
-                        <Image
-                            style={styles.logo}
-                            source={require('../assets/icon-removebg.png')}
-                            alt="Your Company"
-                        />
-                        <Text style={styles.title}>Create a new account</Text>
-                    </View>
+                <View style={styles.imageContainer}>
+                    <Image
+                        style={styles.image}
+                        source={require('../assets/icon-removebg.png')}
+                    />
+                    <Text style={styles.title}>Create a new account</Text>
+                </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>First name</Text>
                     <TextInput
@@ -96,7 +102,8 @@ export default function RegistrationPage() {
                 </View>
                 <TouchableOpacity
                     style= {styles.button}
-                    onPress={() => registerUser(email, password, firstname, lastname)}
+                    //onPress={() => console.log(sendData)}
+                    onPress={() => navigation.navigate('ProfilePicture', sendData)}
                 >
                 <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
