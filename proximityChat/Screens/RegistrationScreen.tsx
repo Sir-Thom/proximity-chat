@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image, ScrollView, Alert } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, Image, ScrollView, Alert } from 'react-native';
 import React, {useState} from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { firebase } from '../firebaseconfig';
 import { styles } from '../Styles/AuthStyles';
 
 export default function RegistrationPage() {
@@ -19,36 +18,12 @@ export default function RegistrationPage() {
         lastname: lastname
     }
 
-    const registerUser = async (email, password, firstname, lastname) => {
+    const chooseProfilePicture = () => {
         if (email === '' || password === '' || firstname === '' || lastname === '') {
             Alert.alert('Invalid input', 'Please fill in all fields.');
             return;
         }
-        else {
-            try{
-                await firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
-                    email,
-                    firstname,
-                    lastname
-                    })
-                    .then(() => {
-                    firebase.auth().currentUser.sendEmailVerification({handleCodeInApp: true, url: 'http://democours-4fc4e.firebaseapp.com'})
-                    })
-                    .catch((error) => {
-                    console.log(error)
-                    })
-                })
-            } catch (error) {
-                if (error.code === 'auth/invalid-email') {
-                    Alert.alert('Badly formatted email', 'Please enter a valid email address.');
-                }
-                else if (error.code === 'auth/weak-password') {
-                    Alert.alert('Weak password', 'Please enter a stronger password. (Minimum 6 characters)');
-                }
-            }
-        }
+        navigation.navigate('ProfilePicture', sendData);
     }
 
     return (
@@ -102,14 +77,13 @@ export default function RegistrationPage() {
                 </View>
                 <TouchableOpacity
                     style= {styles.button}
-                    //onPress={() => console.log(sendData)}
-                    onPress={() => navigation.navigate('ProfilePicture', sendData)}
+                    onPress={chooseProfilePicture}
                 >
                 <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
                 <View style={styles.authContainer}>
                     <Text style={styles.authText}>Already a member? </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Login' as never)}>
                         <Text style={styles.authLink}>Login</Text>
                     </TouchableOpacity>
                 </View>

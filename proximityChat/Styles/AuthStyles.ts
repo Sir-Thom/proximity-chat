@@ -21,6 +21,12 @@ export const styles = StyleSheet.create({
         height: 300,
         marginBottom: 10,
     },
+    picture: {
+        width: 300,
+        height: 300,
+        marginBottom: 25,
+        backgroundColor: '#000000',
+    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
