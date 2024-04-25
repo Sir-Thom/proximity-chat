@@ -31,26 +31,21 @@ const ChatsScreen = () => {
           //.currentuser
       }
   return (
-    <View style={styles.conversationItem}>
         <FlatList 
           data={conversations}
-          renderItem = {itemData => {return(
-            <Conversation 
-              text={itemData.item.text}
-              keyValue={itemData.item.key} 
-              //onDeleteItem = {deleteTodo}
-              />
-          )}}
+          renderItem={({ item }) => (
+              <Text style={styles.conversationItem}>User ID: {item[0].messages[0].author.id}</Text>
+          )}
         />
-      </View>
   );
 };
 
 const styles = StyleSheet.create({
   conversationItem: {
+    color: 'white',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E5EA',
+    borderBottomColor: 'white',
   },
 });
 

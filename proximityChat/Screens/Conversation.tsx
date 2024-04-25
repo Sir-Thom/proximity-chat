@@ -21,9 +21,8 @@ export default function Conversation(props){
     return (
         // mettre el onPress={return: <ChatScreen />}
         <Pressable onPress={this.props.onPress}>
-        {<ChatScreen />}
             <View style = {styles.todoItem}>
-                <Text style = {styles.todoText}>{props.text}</Text>
+                <ChatScreen />
             </View>
         </Pressable>
     );
