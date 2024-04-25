@@ -4,7 +4,6 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/database';
 import "firebase/compat/storage";
 
-
 const firebaseConfig = {
     apiKey: "AIzaSyAQip6InT6CODYjd2YU7644mi-h2tyPZUs",
     authDomain: "proximity-chat-99d8b.firebaseapp.com",

@@ -1,6 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar, ScrollView, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StyleSheet,
+    Image,
+    StatusBar,
+    ScrollView,
+    Alert,
+} from 'react-native';
+
 import { firebase } from '../firebaseconfig';
 import { styles } from '../Styles/AuthStyles';
 
@@ -12,21 +23,23 @@ export default function LoginPage() {
     const loginUser = async (email, password) => {
         if (email === '' || password === '') {
             Alert.alert('Invalid input', 'Please fill in all fields.');
-            return;
-        }
-        else{
+        } else {
             try {
                 await firebase.auth().signInWithEmailAndPassword(email, password);
             } catch (error) {
-                Alert.alert("Login fail", "Email address or password is incorrect. Please try again.");
+                Alert.alert(
+                    'Login fail',
+                    'Email address or password is incorrect. Please try again.',
+                );
             }
         }
-    }
+    };
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollViewContainer} 
-            automaticallyAdjustContentInsets={true}
-            automaticallyAdjustKeyboardInsets={true}
+        <ScrollView
+            contentContainerStyle={styles.scrollViewContainer}
+            automaticallyAdjustContentInsets
+            automaticallyAdjustKeyboardInsets
             bounces={false}>
             <View style={styles.container}>
                 <StatusBar backgroundColor="#1f2937"/>
@@ -43,14 +56,15 @@ export default function LoginPage() {
                     <TextInput
                         style={styles.input}
                         placeholder="Email"
-                        keyboardType='email-address'
+                        keyboardType="email-address"
                         autoCorrect={false}
-                        placeholderTextColor={'#a3a3a3'}
+                        placeholderTextColor="#a3a3a3"
                         onChangeText={(text) => setEmail(text)}
                     />
                     <View style={styles.passwordContainer}>
                         <Text style={styles.label}>Password</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword' as never)}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('ForgotPassword' as never)}>
                             <Text style={styles.forgotPassword}>Forgot password?</Text>
                         </TouchableOpacity>
                     </View>
@@ -58,15 +72,12 @@ export default function LoginPage() {
                         style={styles.input}
                         placeholder="Password"
                         autoCorrect={false}
-                        secureTextEntry={true}
-                        placeholderTextColor={'#a3a3a3'}
+                        secureTextEntry
+                        placeholderTextColor="#a3a3a3"
                         onChangeText={(text) => setPassword(text)}
                     />
                 </View>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => loginUser(email, password)}
-                >
+                <TouchableOpacity style={styles.button} onPress={() => loginUser(email, password)}>
                     <Text style={styles.buttonText}>Sign in</Text>
                 </TouchableOpacity>
                 <View style={styles.authContainer}>

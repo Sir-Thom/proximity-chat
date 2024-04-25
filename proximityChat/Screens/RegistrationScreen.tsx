@@ -2,9 +2,9 @@ import { Text, View, TouchableOpacity, TextInput, Image, ScrollView, Alert } fro
 import React, {useState} from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../Styles/AuthStyles';
+import { firebase } from '../firebaseconfig';
 
 export default function RegistrationPage() {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [firstname, setFirstname] = useState('');
@@ -27,9 +27,10 @@ export default function RegistrationPage() {
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollViewContainer} 
-            automaticallyAdjustContentInsets={true}
-            automaticallyAdjustKeyboardInsets={true}
+        <ScrollView
+            contentContainerStyle={styles.scrollViewContainer}
+            automaticallyAdjustContentInsets
+            automaticallyAdjustKeyboardInsets
             bounces={false}>
             <View style={styles.container}>
                 <View style={styles.imageContainer}>
@@ -43,26 +44,26 @@ export default function RegistrationPage() {
                     <Text style={styles.label}>First name</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder= "First Name"
+                        placeholder="First Name"
                         autoCorrect={false}
-                        placeholderTextColor={'#a3a3a3'}
+                        placeholderTextColor="#a3a3a3"
                         onChangeText={(text) => setFirstname(text)}
                     />
                     <Text style={styles.label}>Last name</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder= "Last Name"
+                        placeholder="Last Name"
                         autoCorrect={false}
-                        placeholderTextColor={'#a3a3a3'}
+                        placeholderTextColor="#a3a3a3"
                         onChangeText={(text) => setLastname(text)}
                     />
                     <Text style={styles.label}>Email address</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder= "Email"
-                        keyboardType='email-address'
+                        placeholder="Email"
+                        keyboardType="email-address"
                         autoCorrect={false}
-                        placeholderTextColor={'#a3a3a3'}
+                        placeholderTextColor="#a3a3a3"
                         onChangeText={(text) => setEmail(text)}
                     />
                     <Text style={styles.label}>Password</Text>
@@ -70,8 +71,8 @@ export default function RegistrationPage() {
                         style={styles.input}
                         placeholder="Password"
                         autoCorrect={false}
-                        secureTextEntry={true}
-                        placeholderTextColor={'#a3a3a3'}
+                        secureTextEntry
+                        placeholderTextColor="#a3a3a3"
                         onChangeText={(text) => setPassword(text)}
                     />
                 </View>
