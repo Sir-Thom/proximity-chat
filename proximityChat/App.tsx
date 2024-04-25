@@ -17,7 +17,6 @@ import RegistrationScreen from './Screens/RegistrationScreen';
 import { firebase } from './firebaseconfig';
 import { DarkHeaderTheme } from './utils/themeDarkHeader';
 
-const stack = createStackNavigator();
 
 function MyTabs() {
   return (
