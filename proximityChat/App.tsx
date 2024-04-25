@@ -76,9 +76,7 @@ function App() {
         );
     }
 
-    return (
-        <stack.Navigator>
-            <stack.Screen name="Map" component={MapScreen} />
+  
 
   return (
     <stack.Navigator>
@@ -91,9 +89,7 @@ function App() {
       <stack.Screen name="Chat" component={ChatScreen}/>
     </stack.Navigator>
   );
-            <stack.Screen name="Chat" component={ChatScreen} />
-        </stack.Navigator>
-    );
+
 }
 
 export default () => {
