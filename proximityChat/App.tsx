@@ -1,6 +1,11 @@
 import 'react-native-gesture-handler';
 import { NavigationContainer, DefaultTheme, useTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ChatsScreen from "./Screens/ChatsScreen";
+
+const stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
 
@@ -13,6 +18,15 @@ import { firebase } from './firebaseconfig';
 import { DarkHeaderTheme } from './utils/themeDarkHeader';
 
 const stack = createStackNavigator();
+
+function MyTabs() {
+  return (
+      <Tab.Navigator>
+        <Tab.Screen name="Map" component={MapScreen} />
+        <Tab.Screen name="Chats" component={ChatsScreen} />
+      </Tab.Navigator>
+  );
+}
 
 function App() {
     // const [theme, setTheme] = useState<string>('');
@@ -67,6 +81,17 @@ function App() {
         <stack.Navigator>
             <stack.Screen name="Map" component={MapScreen} />
 
+  return (
+    <stack.Navigator>
+      <stack.Screen
+          name="MyTabs"
+          component={MyTabs}
+          options={{ headerShown: false }}
+        />
+      <stack.Screen name="Map" component={MapScreen}/>
+      <stack.Screen name="Chat" component={ChatScreen}/>
+    </stack.Navigator>
+  );
             <stack.Screen name="Chat" component={ChatScreen} />
         </stack.Navigator>
     );
