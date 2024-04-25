@@ -1,15 +1,15 @@
 import * as Location from 'expo-location';
-import {firebase} from "../firebaseconfig";
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
+import { firebase } from '../firebaseconfig';
 import { getUserFirstnameById } from '../utils/GetUser';
 import { HandleLocataionUpdate, GetLocation } from '../utils/LocationsUtils';
 import { GTAMapStyle } from '../utils/mapStyle/GTAMapStyle';
 
 // Function to calculate the distance between two coordinates using Haversine formula
-const calculateDistance = (lat1, lon1, lat2, lon2) => {
+export const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radius of the Earth in km
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -41,7 +41,7 @@ const MapScreen = ({ navigation }) => {
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-                alert('Permission to access location was denied');
+              Alert.alert('Permission to access location was denied');
                 return;
             }
 
@@ -61,7 +61,7 @@ const MapScreen = ({ navigation }) => {
                 <MapView
                     // check if the user has dark mode enabled
                     customMapStyle={GTAMapStyle}
-                    testID='map'
+                    testID="map"
                     showsCompass
                     style={styles.map}
                     initialRegion={{
@@ -82,6 +82,7 @@ const MapScreen = ({ navigation }) => {
                         ) {
                             return (
                                 <Marker
+                                testID='marker'
                                     key={user.id + user.userid}
                                     coordinate={{
                                         latitude: parseFloat(user.latitude),
