@@ -22,11 +22,14 @@ const ChatsScreen = () => {
         .on('value', snapshot => {
             //console.log('User data: ', snapshot.val());
             setConversations(snapshot.val());
-            //conversations.forEach(element => {
-            //console.log({element});
-           // })
+            /*conversations.forEach(c => {
+            console.log(c.conversations.messages["-NvmKMHmRxG3EEq-ktml"]);
+            })
+            */
             console.log({conversations});
             console.log(conversations.messages["-NvmKMHmRxG3EEq-ktml"]);
+            //console.log(conversations["-Nvg859t0oCTofwyZXGu"]);
+            //console.log(conversations.messages["-NvmKMHmRxG3EEq-ktml"].author.id);
           });
           
           //.currentuser
