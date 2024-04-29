@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
 
 import ChatScreen from './Screens/ChatScreen';
-import ForgotPasswordScreen from './Screens/ForgotPasswordScreen';
 import LoginScreen from './Screens/LoginScreen';
 import MapScreen from './Screens/MapScreen';
 import RegistrationScreen from './Screens/RegistrationScreen';
@@ -22,11 +21,11 @@ function App() {
 
     /* useEffect(() => {
     if (colorScheme === 'dark') {
-      setTheme(' bg-slate-800 ');
+        setTheme(' bg-slate-800 ');
     } else {
-      setTheme(' bg-slate-100 ');
+        setTheme(' bg-slate-100 ');
     }
-  }, [colorScheme])*/
+    }, [colorScheme])*/
 
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
@@ -66,12 +65,10 @@ function App() {
     }
 
     return (
-      <stack.Navigator >
-        <stack.Screen name="Login"  component={LoginScreen} options={{headerShown: false}}/>
-        <stack.Screen name="Register" component={RegistrationScreen} options={{headerShown: false}}/>
-        <stack.Screen name="ProfilePicture" component={RegisterProfilePicture} options={{headerShown: false}}/>
-        <stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{headerShown: false}}/>
-      </stack.Navigator>
+        <stack.Navigator >
+            <stack.Screen name="Map" component={MapScreen}/>
+            <stack.Screen name="Chat" component={ChatScreen}/>
+        </stack.Navigator>
     );
 }
 

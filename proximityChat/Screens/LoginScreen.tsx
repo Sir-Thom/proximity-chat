@@ -23,9 +23,12 @@ export default function LoginPage() {
     const loginUser = async (email, password) => {
         if (email === '' || password === '') {
             Alert.alert('Invalid input', 'Please fill in all fields.');
-        } else {
+            return;
+        } 
+        else {
             try {
                 await firebase.auth().signInWithEmailAndPassword(email, password);
+                console.log('Logging in...');
             } catch (error) {
                 Alert.alert(
                     'Login fail',
