@@ -1,11 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
     View,
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
     Image,
     StatusBar,
     ScrollView,
@@ -15,10 +13,9 @@ import {
 import { firebase } from '../firebaseconfig';
 import { styles } from '../Styles/AuthStyles';
 
-export default function LoginPage() {
+export default function LoginPage ({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigation = useNavigation();
 
     const loginUser = async (email, password) => {
         if (email === '' || password === '') {
