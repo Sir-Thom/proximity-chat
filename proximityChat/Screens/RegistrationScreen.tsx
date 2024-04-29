@@ -1,15 +1,13 @@
 import { Text, View, TouchableOpacity, TextInput, Image, ScrollView, Alert } from 'react-native';
 import React, {useState} from 'react'
-import { useNavigation } from '@react-navigation/native';
 import { styles } from '../Styles/AuthStyles';
 import { firebase } from '../firebaseconfig';
 
-export default function RegistrationPage() {
+export default function RegistrationPage ({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
-    const navigation = useNavigation();
 
     const sendData = {
         email: email,
