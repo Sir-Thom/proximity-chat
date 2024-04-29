@@ -18,32 +18,36 @@ const ChatsScreen = () => {
       function fetchConversation ()
       {
         const Conversations = firebase.database()
-        .ref('/conversations')
+        .ref('/conversations/-Nvg859t0oCTofwyZXGu')
         .on('value', snapshot => {
-            console.log('User data: ', snapshot.val());
+            //console.log('User data: ', snapshot.val());
             setConversations(snapshot.val());
             //conversations.forEach(element => {
             //console.log({element});
            // })
             console.log({conversations});
+            console.log(conversations.messages["-NvmKMHmRxG3EEq-ktml"]);
           });
           
           //.currentuser
       }
   return (
-        <FlatList 
-          data={conversations}
-          renderItem={({ item }) => (
-              <Text style={styles.conversationItem}>User ID: {item[0].messages[0].author.id}</Text>
-          )}
-        />
-  );
+    <FlatList
+      data={conversations}
+      style={styles.conversationItem}
+      renderItem={({ item }) => (
+        <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text>User ID: {item.messages}</Text>
+        </View>
+      )}
+  />
+         );
 };
 
 const styles = StyleSheet.create({
   conversationItem: {
     color: 'white',
-    padding: 16,
+    backgroundColor: 'orange',
     borderBottomWidth: 1,
     borderBottomColor: 'white',
   },
