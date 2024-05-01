@@ -1,9 +1,8 @@
 import { Text, View, TouchableOpacity, TextInput, Image, ScrollView, Alert } from 'react-native';
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 import { styles } from '../Styles/AuthStyles';
-import { firebase } from '../firebaseconfig';
 
-export default function RegistrationPage ({ navigation }) {
+export default function RegistrationPage({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [firstname, setFirstname] = useState('');
@@ -13,16 +12,16 @@ export default function RegistrationPage ({ navigation }) {
         email: email,
         password: password,
         firstname: firstname,
-        lastname: lastname
-    }
+        lastname: lastname,
+    };
 
     const chooseProfilePicture = () => {
         if (email === '' || password === '' || firstname === '' || lastname === '') {
             Alert.alert('Invalid input', 'Please fill in all fields.');
             return;
         }
-        navigation.navigate('ProfilePicture', sendData);
-    }
+        navigation.navigate('RegisterProfilePicture', sendData);
+    };
 
     return (
         <ScrollView
@@ -32,10 +31,7 @@ export default function RegistrationPage ({ navigation }) {
             bounces={false}>
             <View style={styles.container}>
                 <View style={styles.imageContainer}>
-                    <Image
-                        style={styles.image}
-                        source={require('../assets/icon-removebg.png')}
-                    />
+                    <Image style={styles.image} source={require('../assets/icon-removebg.png')} />
                     <Text style={styles.title}>Create a new account</Text>
                 </View>
                 <View style={styles.inputContainer}>
@@ -74,11 +70,8 @@ export default function RegistrationPage ({ navigation }) {
                         onChangeText={(text) => setPassword(text)}
                     />
                 </View>
-                <TouchableOpacity
-                    style= {styles.button}
-                    onPress={chooseProfilePicture}
-                >
-                <Text style={styles.buttonText}>Register</Text>
+                <TouchableOpacity style={styles.button} onPress={chooseProfilePicture}>
+                    <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
                 <View style={styles.authContainer}>
                     <Text style={styles.authText}>Already a member? </Text>

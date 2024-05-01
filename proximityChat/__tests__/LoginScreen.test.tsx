@@ -4,15 +4,15 @@ import LoginScreen from '../Screens/LoginScreen';
 
 jest.mock('../firebaseconfig', () => ({
     firebase: {
-    auth: jest.fn(() => ({
-        signInWithEmailAndPassword: jest.fn(),
-    })),
+        auth: jest.fn(() => ({
+            signInWithEmailAndPassword: jest.fn(),
+        })),
     },
 }));
 
 describe('LoginScreen', () => {
     it('alert if data is empty', async () => {
-        const {getByText } = render(<LoginScreen navigation={{ navigate: jest.fn() }} />);
+        const { getByText } = render(<LoginScreen navigation={{ navigate: jest.fn() }} />);
         const signInButton = getByText('Sign in');
 
         fireEvent.press(signInButton);

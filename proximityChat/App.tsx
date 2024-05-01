@@ -1,11 +1,9 @@
 import 'react-native-gesture-handler';
-import { NavigationContainer, DefaultTheme, useTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ChatsScreen from "./Screens/ChatsScreen";
-
-const stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+import ChatsScreen from './Screens/ChatsScreen';
+import { Ionicons } from 'react-native-vector-icons';
 import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
 
@@ -13,19 +11,38 @@ import ChatScreen from './Screens/ChatScreen';
 import LoginScreen from './Screens/LoginScreen';
 import MapScreen from './Screens/MapScreen';
 import RegistrationScreen from './Screens/RegistrationScreen';
-import ForgotPasswordScreen from "./Screens/ForgotPasswordScreen";
-import RegisterProfilePicture from "./Screens/RegisterProfilePictureScreen";
+import ForgotPasswordScreen from './Screens/ForgotPasswordScreen';
+import RegisterProfilePicture from './Screens/RegisterProfilePictureScreen';
 import { firebase } from './firebaseconfig';
 import { DarkHeaderTheme } from './utils/themeDarkHeader';
 
+const stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 function MyTabs() {
-  return (
-      <Tab.Navigator>
-        <Tab.Screen name="Map" component={MapScreen} />
-        <Tab.Screen name="Chats" component={ChatsScreen} />
-      </Tab.Navigator>
-  );
+    return (
+        <Tab.Navigator
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+
+                    if (route.name === 'Profile') {
+                        iconName = focused ? 'person-circle' : 'person-circle-outline';
+                    } else if (route.name === 'Map') {
+                        iconName = focused ? 'map' : 'map-outline';
+                    } else if (route.name === 'Chats') {
+                        iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+                    }
+
+                    return <Ionicons name={iconName} size={size} color={color} />;
+                },
+            })}
+        >
+            <Tab.Screen name="Profile" component={LoginScreen} />
+            <Tab.Screen name="Map" component={MapScreen} />
+            <Tab.Screen name="Chats" component={ChatsScreen} />
+        </Tab.Navigator>
+    );
 }
 
 function App() {
@@ -69,6 +86,11 @@ function App() {
                     options={{ headerShown: false }}
                 />
                 <stack.Screen
+                    name="RegisterProfilePicture"
+                    component={RegisterProfilePicture}
+                    options={{ headerShown: false }}
+                />
+                <stack.Screen
                     name="ForgotPassword"
                     component={ForgotPasswordScreen}
                     options={{ headerShown: false }}
@@ -77,20 +99,13 @@ function App() {
         );
     }
 
-  
-
-  return (
-    <stack.Navigator>
-      <stack.Screen
-          name="MyTabs"
-          component={MyTabs}
-          options={{ headerShown: false }}
-        />
-      <stack.Screen name="Map" component={MapScreen}/>
-      <stack.Screen name="Chat" component={ChatScreen}/>
-    </stack.Navigator>
-  );
-
+    return (
+        <stack.Navigator>
+            <stack.Screen name="MyTabs" component={MyTabs} options={{ headerShown: false }} />
+            <stack.Screen name="Map" component={MapScreen} />
+            <stack.Screen name="Chat" component={ChatScreen} />
+        </stack.Navigator>
+    );
 }
 
 export default () => {

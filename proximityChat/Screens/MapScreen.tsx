@@ -1,5 +1,5 @@
 import * as Location from 'expo-location';
-import {firebase} from "../firebaseconfig";
+import { firebase } from '../firebaseconfig';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
@@ -61,7 +61,7 @@ const MapScreen = ({ navigation }) => {
                 <MapView
                     // check if the user has dark mode enabled
                     customMapStyle={GTAMapStyle}
-                    testID='map'
+                    testID="map"
                     showsCompass
                     style={styles.map}
                     initialRegion={{

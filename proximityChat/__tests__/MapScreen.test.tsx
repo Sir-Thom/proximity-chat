@@ -37,6 +37,4 @@ describe('MapScreen', () => {
         // Wait for the map to render
         await waitFor(() => getByTestId('map'));
     });
-
-   
 });

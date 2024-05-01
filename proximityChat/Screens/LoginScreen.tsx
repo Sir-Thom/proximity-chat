@@ -13,7 +13,7 @@ import {
 import { firebase } from '../firebaseconfig';
 import { styles } from '../Styles/AuthStyles';
 
-export default function LoginPage ({ navigation }) {
+export default function LoginPage({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -21,8 +21,7 @@ export default function LoginPage ({ navigation }) {
         if (email === '' || password === '') {
             Alert.alert('Invalid input', 'Please fill in all fields.');
             return;
-        } 
-        else {
+        } else {
             try {
                 await firebase.auth().signInWithEmailAndPassword(email, password);
                 console.log('Logging in...');
@@ -42,7 +41,7 @@ export default function LoginPage ({ navigation }) {
             automaticallyAdjustKeyboardInsets
             bounces={false}>
             <View style={styles.container}>
-                <StatusBar backgroundColor="#1f2937"/>
+                <StatusBar backgroundColor="#1f2937" />
                 <View style={styles.imageContainer}>
                     <Image
                         style={styles.image}

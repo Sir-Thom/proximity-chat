@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
             automaticallyAdjustKeyboardInsets
             bounces={false}>
             <View style={styles.container}>
-                <StatusBar backgroundColor="#1f2937"/>
+                <StatusBar backgroundColor="#1f2937" />
                 <View style={styles.imageContainer}>
                     <Image
                         style={styles.image}

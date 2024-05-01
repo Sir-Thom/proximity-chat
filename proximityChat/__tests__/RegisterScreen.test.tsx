@@ -5,15 +5,15 @@ import { Alert } from 'react-native';
 
 jest.mock('../firebaseconfig', () => ({
     firebase: {
-    auth: jest.fn(() => ({
-        signInWithEmailAndPassword: jest.fn(),
-    })),
+        auth: jest.fn(() => ({
+            signInWithEmailAndPassword: jest.fn(),
+        })),
     },
 }));
 
 describe('LoginScreen', () => {
     it('alert if data is empty', async () => {
-        const {getByText } = render(<RegisterScreen navigation={{ navigate: jest.fn() }} />);
+        const { getByText } = render(<RegisterScreen navigation={{ navigate: jest.fn() }} />);
         const signInButton = getByText('Register');
 
         fireEvent.press(signInButton);
