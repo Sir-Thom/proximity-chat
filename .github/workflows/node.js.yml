@@ -16,13 +16,12 @@ jobs:
         node-version: [21.x]
     steps:
     - uses: actions/checkout@v4
-    - name: Navigate to project directory
-      run: cd proximityChat
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: cd proximityChat
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
