@@ -9,3 +9,15 @@ export const DarkHeaderTheme = {
         notification: '#64748b',
     },
 };
+
+export const LigthHeaderTheme = {
+    dark: false,
+    colors: {
+        primary: '#60a5fa',
+        background: '#f1f5f9',
+        card: '#ffffff',
+        text: '#000000',
+        border: '#cbd5e1',
+        notification: '#60a5fa',
+    },
+};

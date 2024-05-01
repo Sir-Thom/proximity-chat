@@ -8,11 +8,4 @@ module.exports = {
 
     moduleFileExtensions: ['ts', 'tsx', 'js'],
     collectCoverage: true,
-    collectCoverageFrom: [
-        '**/*.{js,jsx}',
-        '!**/coverage/**',
-        '!**/node_modules/**',
-        '!**/babel.config.js',
-        '!**/jest.setup.js',
-    ],
 };

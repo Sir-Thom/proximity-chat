@@ -1,15 +1,16 @@
 import * as Location from 'expo-location';
-import {firebase} from "../firebaseconfig";
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
-import { getUserFirstnameById } from '../utils/GetUser';
+import { firebase } from '../firebaseconfig';
+import { getUserDataById, getUserFirstnameById } from '../utils/GetUser';
 import { HandleLocataionUpdate, GetLocation } from '../utils/LocationsUtils';
 import { GTAMapStyle } from '../utils/mapStyle/GTAMapStyle';
 
+
 // Function to calculate the distance between two coordinates using Haversine formula
-const calculateDistance = (lat1, lon1, lat2, lon2) => {
+export const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radius of the Earth in km
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -41,7 +42,7 @@ const MapScreen = ({ navigation }) => {
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-                alert('Permission to access location was denied');
+              Alert.alert('Permission to access location was denied');
                 return;
             }
 
@@ -50,6 +51,7 @@ const MapScreen = ({ navigation }) => {
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
             });
+            
 
             HandleLocataionUpdate();
         })();
@@ -57,11 +59,12 @@ const MapScreen = ({ navigation }) => {
 
     return (
         <View style={styles.view}>
+           
             {userLocation && (
                 <MapView
                     // check if the user has dark mode enabled
                     customMapStyle={GTAMapStyle}
-                    testID='map'
+                    testID="map"
                     showsCompass
                     style={styles.map}
                     initialRegion={{
@@ -69,7 +72,7 @@ const MapScreen = ({ navigation }) => {
                         longitude: userLocation.longitude,
                         latitudeDelta: 0.03, // Adjust zoom level
                         longitudeDelta: 0.03,
-                    }}>
+                    }}> 
                     {nearbyUsers.map((user) => {
                         if (
                             user.userid !== firebase.auth().currentUser.uid &&
@@ -82,6 +85,7 @@ const MapScreen = ({ navigation }) => {
                         ) {
                             return (
                                 <Marker
+                                testID='marker'
                                     key={user.id + user.userid}
                                     coordinate={{
                                         latitude: parseFloat(user.latitude),
@@ -90,6 +94,7 @@ const MapScreen = ({ navigation }) => {
                                     icon={require('../assets/marker.png')}
                                     onPress={async () => {
                                         const firstName = await getUserFirstnameById(user.userid);
+                                        
                                         navigation.navigate('Chat', { name: firstName });
                                     }}
                                 />
@@ -98,6 +103,7 @@ const MapScreen = ({ navigation }) => {
                         return null;
                     })}
                 </MapView>
+                
             )}
         </View>
     );

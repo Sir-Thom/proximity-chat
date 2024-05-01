@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import { NavigationContainer, DefaultTheme, useTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ChatsScreen from "./Screens/ChatsScreen";
+import ChatsScreen from './Screens/ChatsScreen';
 
 const stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -15,16 +15,16 @@ import LoginScreen from './Screens/LoginScreen';
 import MapScreen from './Screens/MapScreen';
 import RegistrationScreen from './Screens/RegistrationScreen';
 import { firebase } from './firebaseconfig';
-import { DarkHeaderTheme } from './utils/themeDarkHeader';
-
+import { DarkHeaderTheme, LigthHeaderTheme } from './utils/themeDarkHeader';
+import { darkTheme } from '@flyerhq/react-native-chat-ui';
 
 function MyTabs() {
-  return (
-      <Tab.Navigator>
-        <Tab.Screen name="Map" component={MapScreen} />
-        <Tab.Screen name="Chats" component={ChatsScreen} />
-      </Tab.Navigator>
-  );
+    return (
+        <Tab.Navigator>
+            <Tab.Screen name="Map" component={MapScreen} />
+            <Tab.Screen name="Chats" component={ChatsScreen} />
+        </Tab.Navigator>
+    );
 }
 
 function App() {
@@ -76,26 +76,19 @@ function App() {
         );
     }
 
-  
-
-  return (
-    <stack.Navigator>
-      <stack.Screen
-          name="MyTabs"
-          component={MyTabs}
-          options={{ headerShown: false }}
-        />
-      <stack.Screen name="Map" component={MapScreen}/>
-      <stack.Screen name="Chat" component={ChatScreen}/>
-    </stack.Navigator>
-  );
-
+    return (
+        <stack.Navigator>
+            <stack.Screen name="MyTabs" component={MyTabs} options={{ headerShown: false }} />
+            <stack.Screen name="Map" component={MapScreen} />
+            <stack.Screen name="Chat" component={ChatScreen} />
+        </stack.Navigator>
+    );
 }
 
 export default () => {
     const scheme = useColorScheme();
     return (
-        <NavigationContainer theme={scheme === 'dark' ? DarkHeaderTheme : DarkHeaderTheme}>
+        <NavigationContainer theme={scheme === 'dark' ? DarkHeaderTheme : LigthHeaderTheme}>
             <StatusBar barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
             <App />
         </NavigationContainer>
