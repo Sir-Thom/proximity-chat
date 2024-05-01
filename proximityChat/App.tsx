@@ -13,6 +13,7 @@ import MapScreen from './Screens/MapScreen';
 import RegistrationScreen from './Screens/RegistrationScreen';
 import ForgotPasswordScreen from './Screens/ForgotPasswordScreen';
 import RegisterProfilePicture from './Screens/RegisterProfilePictureScreen';
+import UserProfile from './Screens/ProfileScreen';
 import { firebase } from './firebaseconfig';
 import { DarkHeaderTheme } from './utils/themeDarkHeader';
 
@@ -26,21 +27,21 @@ function MyTabs() {
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
 
-                    if (route.name === 'Profile') {
-                        iconName = focused ? 'person-circle' : 'person-circle-outline';
-                    } else if (route.name === 'Map') {
+                    if (route.name === 'Map') {
                         iconName = focused ? 'map' : 'map-outline';
                     } else if (route.name === 'Chats') {
                         iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+                    } else if (route.name === 'My profile') {
+                        iconName = focused ? 'person' : 'person-outline';
                     }
 
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
             })}
         >
-            <Tab.Screen name="Profile" component={LoginScreen} />
             <Tab.Screen name="Map" component={MapScreen} />
             <Tab.Screen name="Chats" component={ChatsScreen} />
+            <Tab.Screen name="My profile" component={UserProfile} />
         </Tab.Navigator>
     );
 }
@@ -104,6 +105,7 @@ function App() {
             <stack.Screen name="MyTabs" component={MyTabs} options={{ headerShown: false }} />
             <stack.Screen name="Map" component={MapScreen} />
             <stack.Screen name="Chat" component={ChatScreen} />
+            <stack.Screen name="My profile" component={UserProfile} />
         </stack.Navigator>
     );
 }
