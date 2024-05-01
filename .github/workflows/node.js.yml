@@ -16,12 +16,17 @@ jobs:
         node-version: [21.x]
     steps:
     - uses: actions/checkout@v4
+    - name: Change directory to proximityChat
+      run: cd proximityChat
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
+        cache-dependency-path: '**/proximityChat/package-lock.json'
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: cd proximityChat
     - run: npm ci
+      working-directory: proximityChat
     - run: npm run build --if-present
+      working-directory: proximityChat
     - run: npm test
+      working-directory: proximityChat
