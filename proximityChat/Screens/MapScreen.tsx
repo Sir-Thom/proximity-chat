@@ -2,6 +2,7 @@ import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import { Asset } from 'expo-asset';
 
 import { firebase } from '../firebaseconfig';
 import { getUserDataById, getUserFirstnameById } from '../utils/GetUser';
@@ -64,6 +65,7 @@ const MapScreen = ({ navigation }) => {
                 <MapView
                     // check if the user has dark mode enabled
                     customMapStyle={GTAMapStyle}
+                    provider="google"
                     testID="map"
                     showsCompass
                     style={styles.map}
@@ -91,7 +93,7 @@ const MapScreen = ({ navigation }) => {
                                         latitude: parseFloat(user.latitude),
                                         longitude: parseFloat(user.longitude),
                                     }}
-                                    icon={require('../assets/marker.png')}
+                                    icon={Asset.fromModule(require('../assets/marker.png'))}
                                     onPress={async () => {
                                         const firstName = await getUserFirstnameById(user.userid);
                                         
