@@ -16,8 +16,8 @@ jobs:
         node-version: [21.x]
     steps:
     - uses: actions/checkout@v4
-    - name: Change directory to folder containing package-lock.json
-      run: cd $(dirname $(find . -type f -name package-lock.json))
+    - name: Change directory to proximityChat
+      run: cd proximityChat
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
