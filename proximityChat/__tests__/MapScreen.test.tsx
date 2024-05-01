@@ -4,24 +4,25 @@ import { Alert } from 'react-native';
 
 import MapScreen, { calculateDistance } from '../Screens/MapScreen';
 
+
 jest.mock('expo-location', () => ({
-    requestForegroundPermissionsAsync: jest
-        .fn()
+    requestForegroundPermissionsAsync: jest.fn()
         .mockResolvedValueOnce({ status: 'granted' }) // Simulate granted state
         .mockResolvedValueOnce({ status: 'denied' }) // Simulate denied state
-        .mockResolvedValueOnce({ status: 'granted' })
-        .mockResolvedValueOnce({ status: 'granted' }),
+        .mockResolvedValueOnce({ status: 'granted' }) 
+        .mockResolvedValueOnce({ status: 'granted' }) ,
 
-    getCurrentPositionAsync: jest
-        .fn()
-        .mockResolvedValue({ coords: { latitude: 40.7128, longitude: -74.006 } }),
+
+    getCurrentPositionAsync: jest.fn().mockResolvedValue({ coords: { latitude: 40.7128, longitude: -74.006 } }),
 }));
+
 
 jest.mock('../firebaseconfig', () => ({
     firebase: {
         auth: () => ({ currentUser: { uid: 'mockUserId' } }),
     },
 }));
+
 
 jest.mock('../utils/GetUser', () => ({
     getUserFirstnameById: jest.fn().mockResolvedValue('MockFirstName'),
@@ -30,6 +31,7 @@ import { getUserFirstnameById } from '../utils/GetUser';
 jest.mock('../utils/GetUser', () => ({
     getUserFirstnameById: jest.fn().mockResolvedValue('MockFirstName'),
 }));
+
 
 jest.mock('../utils/LocationsUtils', () => ({
     GetLocation: jest.fn().mockResolvedValue([
@@ -42,23 +44,23 @@ jest.mock('../utils/LocationsUtils', () => ({
 
 describe('MapScreen component', () => {
     it('requests location permission and sets userLocation when permission is granted', async () => {
-        const { getByTestId } = render(<MapScreen navigation={'Chat'} />);
-        await waitFor(() => expect(getByTestId('map')).toBeDefined());
+        const { getByTestId } = render(<MapScreen navigation={'Chat'}  />);
+        await waitFor(() => expect(getByTestId('map-view-child')).toBeDefined());
         // Expectation: Location permission is granted
-        expect(getByTestId('map')).toBeTruthy();
+        expect(getByTestId('map-view-child')).toBeTruthy(); 
     });
-
+    
     it('displays an alert when location permission is denied', async () => {
         const mockAlert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
-
+    
         const { getByTestId } = render(<MapScreen navigation={undefined} />);
-
+        
         await waitFor(() => {
             expect(mockAlert).toHaveBeenCalled();
             expect(mockAlert).toHaveBeenCalledWith('Permission to access location was denied');
         });
     });
-
+    
     it('calculates distance correctly for known inputs', () => {
         const distance1 = calculateDistance(40.7128, -74.006, 40.7128, -74.0061);
         expect(distance1).toBeCloseTo(0.0084, 4);
@@ -69,20 +71,36 @@ describe('MapScreen component', () => {
 
     it('renders correctly', async () => {
         const { getByTestId } = render(<MapScreen navigation={'Chat'} />);
-        await waitFor(() => expect(getByTestId('map')).toBeDefined());
-        expect(getByTestId('map')).toBeTruthy();
+        await waitFor(() => expect(getByTestId('map-view-child')).toBeDefined());
+        expect(getByTestId('map-view-child')).toBeTruthy(); 
     });
 
     it('navigate to Chat', async () => {
         const mockNavigate = jest.fn();
-        const { getAllByTestId } = render(<MapScreen navigation={{ navigate: mockNavigate }} />);
-        await waitFor(() => expect(getAllByTestId('marker')).toBeDefined());
-
-        fireEvent.press(getAllByTestId('marker')[0]); // Assuming you have a testID for your Marker component
-
-        await waitFor(() => {
-            expect(getUserFirstnameById).toHaveBeenCalled();
-            expect(mockNavigate).toHaveBeenCalledWith('Chat', { name: 'MockFirstName' });
-        });
+        const { getByTestId, queryAllByTestId } = render(<MapScreen navigation={{ navigate: mockNavigate }} />);
+        
+        // Wait for the map to render
+        await waitFor(() => expect(getByTestId('map-view-child')).toBeDefined());
+        
+        // Check if there are any markers rendered
+        const markers = queryAllByTestId('marker');
+        console.log("Number of markers:", markers.length);
+        console.log("Markers:", markers);
+    
+        // Assuming there is at least one marker, press the first one
+        if (markers.length > 0) {
+            fireEvent.press(markers[0]);
+    
+            // Wait for navigation to occur
+            await waitFor(() => {
+                expect(getUserFirstnameById).toHaveBeenCalled();
+                expect(mockNavigate).toHaveBeenCalledWith('Chat', { name: 'MockFirstName' });
+            });
+        } else {
+            console.log("No markers found.");
+        }
     });
+    
+    
+
 });

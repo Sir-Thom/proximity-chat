@@ -59,14 +59,14 @@ const MapScreen = ({ navigation }) => {
     }, []);
 
     return (
-        <View style={styles.view}>
+        <View testID="map-view-child" style={styles.view}>
            
             {userLocation && (
                 <MapView
                     // check if the user has dark mode enabled
                     customMapStyle={GTAMapStyle}
-                    provider="google"
                     testID="map"
+                    provider="google"
                     showsCompass
                     style={styles.map}
                     initialRegion={{
@@ -87,7 +87,7 @@ const MapScreen = ({ navigation }) => {
                         ) {
                             return (
                                 <Marker
-                                testID='marker'
+                                    testID='marker'
                                     key={user.id + user.userid}
                                     coordinate={{
                                         latitude: parseFloat(user.latitude),

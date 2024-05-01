@@ -48,7 +48,7 @@ export async function GetLocation() {
 
         return filteredLocations;
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -58,7 +58,7 @@ export async function GetLocationByUser(userId: string) {
         const snapshot = await locationref.orderByChild('userid').equalTo(userId).once('value');
         return snapshot.val();
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
