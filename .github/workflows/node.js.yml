@@ -24,5 +24,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+      working-directory: proximityChat
     - run: npm run build --if-present
+      working-directory: proximityChat
     - run: npm test
+      working-directory: proximityChat
