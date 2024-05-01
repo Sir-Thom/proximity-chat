@@ -4,9 +4,10 @@ import { View, StyleSheet, Dimensions, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 import { firebase } from '../firebaseconfig';
-import { getUserFirstnameById } from '../utils/GetUser';
+import { getUserDataById, getUserFirstnameById } from '../utils/GetUser';
 import { HandleLocataionUpdate, GetLocation } from '../utils/LocationsUtils';
 import { GTAMapStyle } from '../utils/mapStyle/GTAMapStyle';
+
 
 // Function to calculate the distance between two coordinates using Haversine formula
 export const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -50,6 +51,7 @@ const MapScreen = ({ navigation }) => {
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
             });
+            
 
             HandleLocataionUpdate();
         })();
@@ -57,6 +59,7 @@ const MapScreen = ({ navigation }) => {
 
     return (
         <View style={styles.view}>
+           
             {userLocation && (
                 <MapView
                     // check if the user has dark mode enabled
@@ -69,7 +72,7 @@ const MapScreen = ({ navigation }) => {
                         longitude: userLocation.longitude,
                         latitudeDelta: 0.03, // Adjust zoom level
                         longitudeDelta: 0.03,
-                    }}>
+                    }}> 
                     {nearbyUsers.map((user) => {
                         if (
                             user.userid !== firebase.auth().currentUser.uid &&
@@ -91,6 +94,7 @@ const MapScreen = ({ navigation }) => {
                                     icon={require('../assets/marker.png')}
                                     onPress={async () => {
                                         const firstName = await getUserFirstnameById(user.userid);
+                                        
                                         navigation.navigate('Chat', { name: firstName });
                                     }}
                                 />
@@ -99,6 +103,7 @@ const MapScreen = ({ navigation }) => {
                         return null;
                     })}
                 </MapView>
+                
             )}
         </View>
     );

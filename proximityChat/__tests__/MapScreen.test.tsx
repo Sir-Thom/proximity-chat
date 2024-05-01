@@ -4,25 +4,24 @@ import { Alert } from 'react-native';
 
 import MapScreen, { calculateDistance } from '../Screens/MapScreen';
 
-
 jest.mock('expo-location', () => ({
-    requestForegroundPermissionsAsync: jest.fn()
+    requestForegroundPermissionsAsync: jest
+        .fn()
         .mockResolvedValueOnce({ status: 'granted' }) // Simulate granted state
         .mockResolvedValueOnce({ status: 'denied' }) // Simulate denied state
-        .mockResolvedValueOnce({ status: 'granted' }) 
-        .mockResolvedValueOnce({ status: 'granted' }) ,
+        .mockResolvedValueOnce({ status: 'granted' })
+        .mockResolvedValueOnce({ status: 'granted' }),
 
-
-    getCurrentPositionAsync: jest.fn().mockResolvedValue({ coords: { latitude: 40.7128, longitude: -74.006 } }),
+    getCurrentPositionAsync: jest
+        .fn()
+        .mockResolvedValue({ coords: { latitude: 40.7128, longitude: -74.006 } }),
 }));
-
 
 jest.mock('../firebaseconfig', () => ({
     firebase: {
         auth: () => ({ currentUser: { uid: 'mockUserId' } }),
     },
 }));
-
 
 jest.mock('../utils/GetUser', () => ({
     getUserFirstnameById: jest.fn().mockResolvedValue('MockFirstName'),
@@ -31,7 +30,6 @@ import { getUserFirstnameById } from '../utils/GetUser';
 jest.mock('../utils/GetUser', () => ({
     getUserFirstnameById: jest.fn().mockResolvedValue('MockFirstName'),
 }));
-
 
 jest.mock('../utils/LocationsUtils', () => ({
     GetLocation: jest.fn().mockResolvedValue([
@@ -47,20 +45,20 @@ describe('MapScreen component', () => {
         const { getByTestId } = render(<MapScreen navigation={'Chat'} />);
         await waitFor(() => expect(getByTestId('map')).toBeDefined());
         // Expectation: Location permission is granted
-        expect(getByTestId('map')).toBeTruthy(); 
+        expect(getByTestId('map')).toBeTruthy();
     });
-    
+
     it('displays an alert when location permission is denied', async () => {
         const mockAlert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
-    
+
         const { getByTestId } = render(<MapScreen navigation={undefined} />);
-        
+
         await waitFor(() => {
             expect(mockAlert).toHaveBeenCalled();
             expect(mockAlert).toHaveBeenCalledWith('Permission to access location was denied');
         });
     });
-    
+
     it('calculates distance correctly for known inputs', () => {
         const distance1 = calculateDistance(40.7128, -74.006, 40.7128, -74.0061);
         expect(distance1).toBeCloseTo(0.0084, 4);
@@ -72,7 +70,7 @@ describe('MapScreen component', () => {
     it('renders correctly', async () => {
         const { getByTestId } = render(<MapScreen navigation={'Chat'} />);
         await waitFor(() => expect(getByTestId('map')).toBeDefined());
-        expect(getByTestId('map')).toBeTruthy(); 
+        expect(getByTestId('map')).toBeTruthy();
     });
 
     it('navigate to Chat', async () => {
@@ -87,5 +85,4 @@ describe('MapScreen component', () => {
             expect(mockNavigate).toHaveBeenCalledWith('Chat', { name: 'MockFirstName' });
         });
     });
-
 });
