@@ -1,16 +1,14 @@
-import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Alert } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Asset } from 'expo-asset';
+import * as Location from 'expo-location';
 
 import { firebase } from '../firebaseconfig';
 import { getUserFirstnameById } from '../utils/GetUser';
 import { HandleLocataionUpdate, GetLocation } from '../utils/LocationsUtils';
 import { GTAMapStyle } from '../utils/mapStyle/GTAMapStyle';
 
-
-// Function to calculate the distance between two coordinates using Haversine formula
 export const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371; // Radius of the Earth in km
     const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -18,9 +16,9 @@ export const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(lat1 * (Math.PI / 180)) *
-            Math.cos(lat2 * (Math.PI / 180)) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c; // Distance in km
     return distance;
@@ -31,42 +29,8 @@ const MapScreen = ({ navigation }) => {
     const [nearbyUsers, setNearbyUsers] = useState([]);
 
     useEffect(() => {
-        (async () => {
-            const location = await GetLocation();
-            if (location) {
-                setNearbyUsers(location);
-            }
-        })();
-    }, []);
-
-// add  auto refresh location
-
-
-    useEffect(() => {
-        (async () => {
-            const { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-              Alert.alert('Permission to access location was denied');
-                return;
-            }
-
-            const location = await Location.getCurrentPositionAsync({});
-           
-            
-            setUserLocation({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-            });
-
-            
-
-            HandleLocataionUpdate();
-        })();
-    }, []);
-
-    const autoRefreshLocation = () => {
-        setInterval(() => {
-            (async () => {
+        const fetchLocation = async () => {
+            try {
                 const { status } = await Location.requestForegroundPermissionsAsync();
                 if (status !== 'granted') {
                     Alert.alert('Permission to access location was denied');
@@ -78,32 +42,50 @@ const MapScreen = ({ navigation }) => {
                     latitude: location.coords.latitude,
                     longitude: location.coords.longitude,
                 });
-                HandleLocataionUpdate();
-            })();
-        }, 10000);
-    }
 
-    autoRefreshLocation();
+                HandleLocataionUpdate();
+            } catch (error) {
+                console.error('Error fetching location:', error);
+                Alert.alert('Error fetching location');
+            }
+        };
+
+        fetchLocation();
+
+        const locationInterval = setInterval(fetchLocation, 10000); 
+
+        return () => clearInterval(locationInterval); 
+    }, []);
+
+    useEffect(() => {
+        const fetchNearbyUsers = async () => {
+            const locationData = await GetLocation();
+            setNearbyUsers(locationData || []);
+        };
+
+        fetchNearbyUsers(); 
+
+        const nearbyUsersInterval = setInterval(fetchNearbyUsers, 10000); 
+
+        return () => clearInterval(nearbyUsersInterval); 
+    }, []);
 
     return (
         <View testID="map-view-child" style={styles.view}>
-           
             {userLocation && (
                 <MapView
-                    // check if the user has dark mode enabled
                     customMapStyle={GTAMapStyle}
                     testID="map"
-
                     provider={PROVIDER_GOOGLE}
-
                     showsCompass
                     style={styles.map}
                     initialRegion={{
                         latitude: userLocation.latitude,
                         longitude: userLocation.longitude,
-                        latitudeDelta: 0.03, // Adjust zoom level
+                        latitudeDelta: 0.03,
                         longitudeDelta: 0.03,
-                    }}> 
+                    }}
+                >
                     {nearbyUsers.map((user) => {
                         if (
                             user.userid !== firebase.auth().currentUser.uid &&
@@ -116,8 +98,8 @@ const MapScreen = ({ navigation }) => {
                         ) {
                             return (
                                 <Marker
-                                    testID='marker'
-                                    key={user.id + user.userid}
+                                    testID={`marker-${user.id}-${user.userid}`}
+                                    key={`${user.id}-${user.userid}`}
                                     coordinate={{
                                         latitude: parseFloat(user.latitude),
                                         longitude: parseFloat(user.longitude),
@@ -125,7 +107,6 @@ const MapScreen = ({ navigation }) => {
                                     icon={Asset.fromModule(require('../assets/marker.png'))}
                                     onPress={async () => {
                                         const firstName = await getUserFirstnameById(user.userid);
-                                        
                                         navigation.navigate('Chat', { name: firstName });
                                     }}
                                 />
@@ -134,7 +115,6 @@ const MapScreen = ({ navigation }) => {
                         return null;
                     })}
                 </MapView>
-                
             )}
         </View>
     );
