@@ -1,5 +1,5 @@
-import { StyleSheet, View, Text, Pressable } from "react-native";
-import ChatScreen from "./ChatScreen";
+import { StyleSheet, View, Text, Pressable } from 'react-native';
+import ChatScreen from './ChatScreen';
 
 /*function fetchMessages ()
       {
@@ -17,11 +17,11 @@ import ChatScreen from "./ChatScreen";
           //.currentuser
       }
 */
-export default function Conversation(props){
+export default function Conversation(props) {
     return (
         // mettre el onPress={return: <ChatScreen />}
         <Pressable onPress={this.props.onPress}>
-            <View style = {styles.todoItem}>
+            <View style={styles.todoItem}>
                 <ChatScreen />
             </View>
         </Pressable>
@@ -29,12 +29,12 @@ export default function Conversation(props){
 }
 
 const styles = StyleSheet.create({
-    todoItem:{
+    todoItem: {
         flex: 1,
         padding: 24,
         backgroundColor: '#eaeaea',
     },
-    todoText:{
+    todoText: {
         marginTop: 16,
         paddingVertical: 8,
         borderWidth: 4,
@@ -45,5 +45,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 30,
         fontWeight: 'bold',
-    }
+    },
 });
