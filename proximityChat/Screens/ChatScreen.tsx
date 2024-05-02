@@ -26,9 +26,8 @@ export default function ChatScreen(props) {
             title: props.route.params.name,
         });
     }, [navigation]);
-    const user = { id: '06c33e8b-e835-4736-80f4-63f44b66666c' }; // TODO: user par firebase
-    const user2 = { id: '06c33e8b-e835-4736-80f4-63f34b66436c' }; // TODO: user par firebase
-    const conversationId = '-Nvg859t0oCTofwyZXGu';
+    const user = { id: firebase.auth().currentUser.uid }; // TODO: user par firebase
+    const user2 = { id: props.route.params.otherUserId }; // TODO: user par firebase
     const [conversation, setConversation] = useState<firebase.database.Reference>();
     const [messages, setMessages] = useState<MessageType.Any[]>([]); // TODO: messages par firebase
 
@@ -108,13 +107,9 @@ export default function ChatScreen(props) {
     }, [colorScheme]);
 
     useEffect(() => {
-        let tempConversation: firebase.database.Reference;
         const conversationRef = firebase.database().ref('conversations');
-        if (conversationId) {
-            tempConversation = conversationRef.child(conversationId);
-        } else {
-            tempConversation = conversationRef.push({ messages: [] });
-        }
+        const userRef = firebase.database().ref('users/' + user.id);
+        const tempConversation = userRef.child('conversations').child(user2.id);
 
         setConversation(tempConversation);
 

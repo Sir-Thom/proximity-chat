@@ -126,7 +126,7 @@ const MapScreen = ({ navigation }) => {
                                     onPress={async () => {
                                         const firstName = await getUserFirstnameById(user.userid);
                                         
-                                        navigation.navigate('Chat', { name: firstName });
+                                        navigation.navigate('Chat', { name: firstName, otherUserId: user.userid });
                                     }}
                                 />
                             );
