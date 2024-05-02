@@ -43,6 +43,16 @@ jest.mock('../utils/LocationsUtils', () => ({
 }));
 
 describe('MapScreen component', () => {
+    jest.mock('expo-location', () => ({
+        requestForegroundPermissionsAsync: jest.fn()
+            .mockResolvedValueOnce({ status: 'granted' }) // Simulate granted state
+            .mockResolvedValueOnce({ status: 'denied' }) // Simulate denied state
+            .mockResolvedValueOnce({ status: 'granted' }) 
+            .mockResolvedValueOnce({ status: 'granted' }) ,
+
+        getCurrentPositionAsync: jest.fn().mockResolvedValue({ coords: { latitude: 40.7128, longitude: -74.006 } }),
+    }));
+
     it('requests location permission and sets userLocation when permission is granted', async () => {
         const { getByTestId } = render(<MapScreen navigation={'Chat'}  />);
         await waitFor(() => expect(getByTestId('map-view-child')).toBeDefined());
