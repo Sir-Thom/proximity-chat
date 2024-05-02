@@ -50,11 +50,11 @@ const MapScreen = ({ navigation }) => {
             }
         };
 
-        fetchLocation(); // Fetch location when the component mounts
+        fetchLocation();
 
-        const locationInterval = setInterval(fetchLocation, 10000); // Refresh location every 1 minute
+        const locationInterval = setInterval(fetchLocation, 10000); 
 
-        return () => clearInterval(locationInterval); // Clear interval on component unmount
+        return () => clearInterval(locationInterval); 
     }, []);
 
     useEffect(() => {
@@ -63,11 +63,11 @@ const MapScreen = ({ navigation }) => {
             setNearbyUsers(locationData || []);
         };
 
-        fetchNearbyUsers(); // Fetch nearby users when the component mounts
+        fetchNearbyUsers(); 
 
-        const nearbyUsersInterval = setInterval(fetchNearbyUsers, 10000); // Refresh nearby users every 1 minute
+        const nearbyUsersInterval = setInterval(fetchNearbyUsers, 10000); 
 
-        return () => clearInterval(nearbyUsersInterval); // Clear interval on component unmount
+        return () => clearInterval(nearbyUsersInterval); 
     }, []);
 
     return (
