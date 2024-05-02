@@ -20,12 +20,12 @@ const ChatsScreen = () => {
             .database()
             .ref('/conversations')
             .on('value', (snapshot) => {
-                console.log('User data: ', snapshot.val());
+                //console.log('User data: ', snapshot.val());
                 setConversations(snapshot.val());
                 //conversations.forEach(element => {
                 //console.log({element});
                 // })
-                console.log({ conversations });
+               // console.log({ conversations });
             });
 
         //.currentuser

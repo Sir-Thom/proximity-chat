@@ -27,7 +27,7 @@ export async function StoreLocation(latitude: number, longitude: number) {
             }
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -39,13 +39,16 @@ export async function GetLocation() {
 
         // Filter out the current user's location
         const currentUserUid = firebase.auth().currentUser.uid;
+        if (currentUserUid == undefined || null){
+          
+        }
         const filteredLocations = Object.values(locations).filter(
             (location) => location !== currentUserUid,
         );
 
         return filteredLocations;
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -55,7 +58,7 @@ export async function GetLocationByUser(userId: string) {
         const snapshot = await locationref.orderByChild('userid').equalTo(userId).once('value');
         return snapshot.val();
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 

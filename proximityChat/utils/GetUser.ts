@@ -1,4 +1,5 @@
 import { firebase } from '../firebaseconfig';
+import { GetLocationByUser } from './LocationsUtils';
 
 export const getUser = async () => {
     const users = await firebase.firestore().collection('users').get();
@@ -11,3 +12,10 @@ export const getUserFirstnameById = async (userId) => {
         .firstname;
     return user;
 };
+
+export  const getUserDataById = async (userId: string) => {
+    const user = (await firebase.firestore().collection('users').doc(userId).get()).data();
+    const location = await GetLocationByUser(userId);
+    const userData = { ...user, location: location };
+    return userData;
+}

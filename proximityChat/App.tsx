@@ -15,7 +15,8 @@ import ForgotPasswordScreen from './Screens/ForgotPasswordScreen';
 import RegisterProfilePicture from './Screens/RegisterProfilePictureScreen';
 import UserProfile from './Screens/ProfileScreen';
 import { firebase } from './firebaseconfig';
-import { DarkHeaderTheme } from './utils/themeDarkHeader';
+import { DarkHeaderTheme, LigthHeaderTheme } from './utils/themeDarkHeader';
+import { darkTheme } from '@flyerhq/react-native-chat-ui';
 
 const stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -113,7 +114,7 @@ function App() {
 export default () => {
     const scheme = useColorScheme();
     return (
-        <NavigationContainer theme={scheme === 'dark' ? DarkHeaderTheme : DarkHeaderTheme}>
+        <NavigationContainer theme={scheme === 'dark' ? DarkHeaderTheme : LigthHeaderTheme}>
             <StatusBar barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
             <App />
         </NavigationContainer>
