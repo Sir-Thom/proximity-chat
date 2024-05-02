@@ -59,10 +59,10 @@ describe('MapScreen component', () => {
         // Expectation: Location permission is granted
         expect(getByTestId('map-view-child')).toBeTruthy(); 
     });
-
+    
     it('displays an alert when location permission is denied', async () => {
         const mockAlert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
-
+    
         const { getByTestId } = render(<MapScreen navigation={undefined} />);
         
         await waitFor(() => {
@@ -70,7 +70,7 @@ describe('MapScreen component', () => {
             expect(mockAlert).toHaveBeenCalledWith('Permission to access location was denied');
         });
     });
-
+    
     it('calculates distance correctly for known inputs', () => {
         const distance1 = calculateDistance(40.7128, -74.006, 40.7128, -74.0061);
         expect(distance1).toBeCloseTo(0.0084, 4);
