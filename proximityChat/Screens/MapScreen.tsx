@@ -93,7 +93,9 @@ const MapScreen = ({ navigation }) => {
                     // check if the user has dark mode enabled
                     customMapStyle={GTAMapStyle}
                     testID="map"
+
                     provider={PROVIDER_GOOGLE}
+
                     showsCompass
                     style={styles.map}
                     initialRegion={{
