@@ -1,11 +1,11 @@
 import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Alert } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Asset } from 'expo-asset';
 
 import { firebase } from '../firebaseconfig';
-import { getUserDataById, getUserFirstnameById } from '../utils/GetUser';
+import { getUserFirstnameById } from '../utils/GetUser';
 import { HandleLocataionUpdate, GetLocation } from '../utils/LocationsUtils';
 import { GTAMapStyle } from '../utils/mapStyle/GTAMapStyle';
 
@@ -39,6 +39,9 @@ const MapScreen = ({ navigation }) => {
         })();
     }, []);
 
+// add  auto refresh location
+
+
     useEffect(() => {
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
@@ -48,15 +51,39 @@ const MapScreen = ({ navigation }) => {
             }
 
             const location = await Location.getCurrentPositionAsync({});
+           
+            
             setUserLocation({
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
             });
+
             
 
             HandleLocataionUpdate();
         })();
     }, []);
+
+    const autoRefreshLocation = () => {
+        setInterval(() => {
+            (async () => {
+                const { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    Alert.alert('Permission to access location was denied');
+                    return;
+                }
+
+                const location = await Location.getCurrentPositionAsync({});
+                setUserLocation({
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                });
+                HandleLocataionUpdate();
+            })();
+        }, 10000);
+    }
+
+    autoRefreshLocation();
 
     return (
         <View testID="map-view-child" style={styles.view}>
@@ -66,7 +93,7 @@ const MapScreen = ({ navigation }) => {
                     // check if the user has dark mode enabled
                     customMapStyle={GTAMapStyle}
                     testID="map"
-                    provider="google"
+                    provider={PROVIDER_GOOGLE}
                     showsCompass
                     style={styles.map}
                     initialRegion={{
