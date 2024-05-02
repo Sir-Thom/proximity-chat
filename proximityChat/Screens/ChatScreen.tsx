@@ -129,15 +129,18 @@ export default function ChatScreen(props) {
     }, []);
 
     return (
-        <Chat
-            messages={messages}
-            user={user}
-            theme={colorScheme === 'dark' ? darkTheme : defaultTheme}
-            onSendPress={handleSendPress}
-            onAttachmentPress={handleImageSelection}
-            onPreviewDataFetched={handlePreviewDataFetched}
-            showUserAvatars
-        />
+        <View testID="chat">
+            <Chat
+                
+                messages={messages}
+                user={user}
+                theme={colorScheme === 'dark' ? darkTheme : defaultTheme}
+                onSendPress={handleSendPress}
+                onAttachmentPress={handleImageSelection}
+                onPreviewDataFetched={handlePreviewDataFetched}
+                showUserAvatars
+            />
+        </View>
     );
 }
 

@@ -110,7 +110,4 @@ describe('MapScreen component', () => {
             console.log("No markers found.");
         }
     });
-    
-    
-
 });

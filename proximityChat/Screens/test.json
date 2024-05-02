@@ -1,16 +1,16 @@
 {
-    "users": [{
-        "id": "1",
-        "name": "Alice",
-        "latitude": 40.798221,
-        "longitude": -73.948246
-      },
-      {
-        "id": "2",
-        "name": "Bob",
-        "latitude": 46.118954,
-        "longitude": -70.671344
-      }
+    "users": [
+        {
+            "id": "1",
+            "name": "Alice",
+            "latitude": 40.798221,
+            "longitude": -73.948246
+        },
+        {
+            "id": "2",
+            "name": "Bob",
+            "latitude": 46.118954,
+            "longitude": -70.671344
+        }
     ]
-  }
-  
+}
