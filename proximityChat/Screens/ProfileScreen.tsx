@@ -7,7 +7,6 @@ import { firebase } from '../firebaseconfig';
 
 export default function RegisterProfilePicturePage({ navigation }) {
     const [image, setImage] = useState(null);
-    const [passwordVerification, setPasswordVerification] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
@@ -15,7 +14,6 @@ export default function RegisterProfilePicturePage({ navigation }) {
     const [newLastname, setNewLastname] = useState('');
     const [firstnameInput, setFirstnameInput] = useState('');
     const [lastnameInput, setLastnameInput] = useState('');
-    const [newProfilePicture, setNewProfilePicture] = useState(null);
 
 
     useEffect(() => {
@@ -32,12 +30,11 @@ export default function RegisterProfilePicturePage({ navigation }) {
         setNewLastname(text);
     }
 
-    const revertChanges = () => {
+    const clear = () => {
         setFirstnameInput('');
         setLastnameInput('');
         setNewFirstname(firstname);
         setNewLastname(lastname);
-        setNewProfilePicture(profilePicture);
         setImage(null);
     };
 
@@ -49,7 +46,6 @@ export default function RegisterProfilePicturePage({ navigation }) {
                 if (userDoc.exists) {
                     const profilePictureUrl = userDoc.data().profilePictureUrl;
                     setProfilePicture(profilePictureUrl);
-                    setNewProfilePicture(profilePictureUrl);
                     const firstname = userDoc.data().firstname;
                     setFirstname(firstname);
                     setNewFirstname(firstname);
@@ -64,6 +60,34 @@ export default function RegisterProfilePicturePage({ navigation }) {
             console.log('Error fetching user profile picture:', error);
         }
     };
+
+    const updateProfile = async () => {
+        try {
+            const user = firebase.auth().currentUser;
+            if (user) {
+                const userDocRef = firebase.firestore().collection('users').doc(user.uid);
+                const userDoc = await userDocRef.get();
+                if (userDoc.exists) {
+                    const profilePictureUrl = userDoc.data().profilePictureUrl;
+                        if(image !== null){
+                            const imageRef = firebase.storage().refFromURL(profilePictureUrl);
+                            await imageRef.delete();
+                            await uploadImage();
+                        }
+                    await userDocRef.update({
+                        firstname: newFirstname,
+                        lastname: newLastname,
+                    });
+                    await fetchUserProfileData();
+                    await setFirstnameInput('');
+                    await setLastnameInput('');
+                }
+            }
+            
+        } catch (error) {
+            console.log('Error updating user profile:', error);
+        }
+    }
 
     const pickImage = async (mode) => {
         try {
@@ -94,6 +118,31 @@ export default function RegisterProfilePicturePage({ navigation }) {
         }
     };
 
+    const uploadImage = async () => {
+        if (image != null) {
+            const response = await fetch(image);
+            const blob = await response.blob();
+            const filename = image.substring(image.lastIndexOf('/') + 1);
+            const ref = firebase
+                .storage()
+                .ref()
+                .child('images/' + firebase.auth().currentUser.uid + '/profilePicture/' + filename);
+            await ref.put(blob);
+            const imageUrl = await ref.getDownloadURL();
+            const userDocRef = firebase
+                .firestore()
+                .collection('users')
+                .doc(firebase.auth().currentUser.uid);
+            await userDocRef.update({ profilePictureUrl: imageUrl });
+            try {
+                await ref;
+            } catch (e) {
+                console.log(e);
+            }
+            setImage(null);
+        }
+    };
+
     return (
         <ScrollView
             contentContainerStyle={styles.scrollViewContainer}
@@ -103,7 +152,7 @@ export default function RegisterProfilePicturePage({ navigation }) {
             <View style={styles.container}>
                 <View style={styles.imageContainer}>
                     <View style={{ paddingTop: 25 }}>
-                    <Image source={{ uri: image ? image : newProfilePicture }} style={styles.picture} />
+                    <Image source={{ uri: image ? image : profilePicture }} style={styles.picture} />
                     </View>
                     <Text style={styles.title}>{newFirstname} {newLastname}</Text> 
                 </View>
@@ -151,13 +200,14 @@ export default function RegisterProfilePicturePage({ navigation }) {
                         <View style={{ paddingRight: 10 }}>
                             <TouchableOpacity
                                 style={styles.button}
-                                onPress={revertChanges}>
+                                onPress={clear}>
                                 <Text style={styles.buttonText}>Revert change</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ paddingLeft: 10 }}>
                             <TouchableOpacity
-                                style={styles.button}>
+                                style={styles.button}
+                                onPress={updateProfile}>
                                 <Text style={styles.buttonText}>Apply change</Text>
                             </TouchableOpacity>
                         </View>
