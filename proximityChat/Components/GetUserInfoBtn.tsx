@@ -11,6 +11,7 @@ import { getUserDataById } from '../utils/GetUser';
 import { firebase } from '../firebaseconfig';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import { styles } from '../Styles/AuthStyles';
 
 const GetUserInfoBtn = (props) => {
     async function onPress(event: GestureResponderEvent): Promise<void> {
@@ -63,25 +64,11 @@ const GetUserInfoBtn = (props) => {
 
     return (
         <TouchableOpacity onPress={onPress}>
-            <View style={styles.buttonContainer}>
-                <Text style={styles.buttonText}>{props.title}</Text>
+            <View style={styles.authContainer}>
+                <Text style={styles.authLink}>{props.title}</Text>
             </View>
         </TouchableOpacity>
     );
 };
 
 export default GetUserInfoBtn;
-
-const styles = StyleSheet.create({
-    buttonContainer: {
-        backgroundColor: '#4f46e5', 
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 20,
-    },
-    buttonText: {
-        color: '#FFFFFF', 
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-});

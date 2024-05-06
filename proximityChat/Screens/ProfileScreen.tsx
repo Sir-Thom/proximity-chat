@@ -5,6 +5,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { styles } from '../Styles/AuthStyles';
 import { firebase } from '../firebaseconfig';
 
+import GetUserInfoBtn from '../Components/GetUserInfoBtn';
+
 export default function RegisterProfilePicturePage({ navigation }) {
     const [image, setImage] = useState(null);
     const [profilePicture, setProfilePicture] = useState(null);
@@ -157,8 +159,10 @@ export default function RegisterProfilePicturePage({ navigation }) {
                     <Text style={styles.title}>{newFirstname} {newLastname}</Text> 
                 </View>
                 <View>
-                    <Text style={styles.label}>Change profile picture</Text>                     
-                    <View style={{ flexDirection: 'row', padding: 25 }}>
+                    <View style={{alignItems: 'center'}}>
+                        <Text style={styles.label}>Change profile picture</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', paddingBottom: 25 }}>
                         <View style={{ paddingRight: 15 }}>
                             <TouchableOpacity
                                 style={styles.button}
@@ -211,6 +215,9 @@ export default function RegisterProfilePicturePage({ navigation }) {
                                 <Text style={styles.buttonText}>Apply change</Text>
                             </TouchableOpacity>
                         </View>
+                    </View>
+                    <View style={{padding: 10}}>
+                        <GetUserInfoBtn title="Download my data"/>
                     </View>
                 </View> 
             </View>

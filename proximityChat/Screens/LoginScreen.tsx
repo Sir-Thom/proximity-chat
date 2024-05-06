@@ -24,7 +24,6 @@ export default function LoginPage({ navigation }) {
         } else {
             try {
                 await firebase.auth().signInWithEmailAndPassword(email, password);
-                console.log('Logging in...');
             } catch (error) {
                 Alert.alert(
                     'Login fail',
