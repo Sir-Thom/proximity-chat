@@ -10,6 +10,7 @@ import Conversation from './Conversation';
 import { useNavigation } from '@react-navigation/native';
 
 const ChatsScreen = () => {
+  
     const [conversations,setConversations] = useState([]);
     const [messages,setMessages] = useState([]);
     const navigation = useNavigation();
@@ -17,52 +18,73 @@ const ChatsScreen = () => {
     useEffect(() => {
         fetchConversation();
       }, []);
+      //faire la logique quand le user na aucune conversation pour pas ca plente
+
 
       function fetchConversation() {
         const user = firebase.auth().currentUser.uid;
+        
         const ConversationsRef = firebase.database().ref("users/" + user + "/conversations");
         ConversationsRef.on('value', snapshot => {
           const conversationsObj = snapshot.val();
-          const conversationsArray = Object.entries(conversationsObj).map(([key, val]) => ({
-            id: key,
-            ...val
-          }));
-          setConversations(conversationsArray);
-          console.log(conversationsArray)
+          if (conversationsObj) { // Vérifiez si l'objet n'est pas null
+            const conversationsArray = Object.entries(conversationsObj).map(([key, val]) => ({
+              id: key,
+              ...val
+            }));
+            setConversations(conversationsArray); // Mettez à jour l'état avec le nouveau tableau
+          } else {
+            setConversations([]); // Mettez à jour l'état avec un tableau vide si aucun objet de conversation n'est trouvé
+          }
         });
       }
-     
-      return (
-        <View>
-          <FlatList
-            data={conversations}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  // Naviguez vers ChatScreen avec les données de la conversation
-                  navigation.navigate('ChatScreen', { conversation: item });
-                }}
-              >
-                <View style={styles.conversationItem}>
-                  <Text>Destinataire ID: {item.id}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
-      );
-    };
+      
+   
+   return (
+  <View style={styles.container}>
+    {conversations.length === 0 ? (
+      <View style={styles.centeredMessage}>
+        <Text>Aucune conversation en cours.</Text>
+      </View>
+    ) : (
+      <FlatList
+        data={conversations}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('ChatScreen', { conversation: item });
+            }}
+          >
+            <View style={styles.conversationItem}>
+              <Text>Destinataire ID: {item.id}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    )}
+  </View>
+);
 
-    const styles = StyleSheet.create({
-      conversationItem: {
-        backgroundColor: '#F5F5F5', // Couleur de fond légère
-        borderBottomWidth: 1,
-        borderBottomColor: '#E0E0E0', // Couleur de la ligne de séparation
-        paddingVertical: 10, // Espacement vertical
-        paddingHorizontal: 16, // Espacement horizontal
-      },
-    });
+};
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, // Utilisez tout l'espace disponible
+  },
+  centeredMessage: {
+    flex: 1, // Utilisez tout l'espace disponible
+    justifyContent: 'center', // Centre verticalement
+    alignItems: 'center', // Centre horizontalement
+  },
+  conversationItem: {
+    backgroundColor: '#F5F5F5',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+  },
+});
+
     
 
 export default ChatsScreen;
