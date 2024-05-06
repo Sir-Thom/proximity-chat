@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ChatsScreen from './Screens/ChatsScreen';
 import { Ionicons } from 'react-native-vector-icons';
 import React, { useEffect, useState } from 'react';
-import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
+import { StatusBar, View, Image, useColorScheme } from 'react-native';
 
 import ChatScreen from './Screens/ChatScreen';
 import LoginScreen from './Screens/LoginScreen';
@@ -22,18 +22,65 @@ const stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function MyTabs() {
+    const [profilePicture, setProfilePicture] = useState(null);
+
+    useEffect(() => {
+        fetchUserProfilePicture();
+    }, []);
+
+    useEffect(() => {
+        const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                const userDocRef = firebase.firestore().collection('users').doc(user.uid);
+                const unsubscribeProfile = userDocRef.onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const newProfileUrl = doc.data().profilePictureUrl;
+                        setProfilePicture(newProfileUrl);
+                    }
+                });
+                return () => unsubscribeProfile();
+            }
+        });
+        return () => unsubscribe();
+    }, []);
+
+    const fetchUserProfilePicture = async () => {
+        try {
+            const user = firebase.auth().currentUser;
+            if (user) {
+                const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    const profilePictureUrl = userDoc.data().profilePictureUrl;
+                    setProfilePicture(profilePictureUrl);
+                } else {
+                    console.log('User document does not exist');
+                }
+            }
+        } catch (error) {
+            console.log('Error fetching user profile picture:', error);
+        }
+    };
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
+                    if (route.name === 'My profile') {
+                        return (
+                            <View style={{ width: size, height: size }}>
+                                <Image
+                                    source={{ uri: profilePicture }}
+                                    style={{ width: '100%', height: '100%', borderRadius: size / 2 }}
+                                />
+                            </View>
+                        );
+                    }
                     let iconName;
 
                     if (route.name === 'Map') {
                         iconName = focused ? 'map' : 'map-outline';
                     } else if (route.name === 'Chats') {
                         iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
-                    } else if (route.name === 'My profile') {
-                        iconName = focused ? 'person' : 'person-outline';
                     }
 
                     return <Ionicons name={iconName} size={size} color={color} />;
