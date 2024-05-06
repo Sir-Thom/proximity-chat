@@ -40,8 +40,12 @@ jest.mock('../firebaseconfig', () => ({
 
 describe('ChatScreen component', () => {
     it('Chat is created', async () => {
-        const mockNavigate = jest.fn();
-        const { getByTestId } = render(<ChatScreen navigation={{ navigate: mockNavigate }} name="name" otherUserId="userid"/>);
+        const mockNavigate = { 
+            navigate: jest.fn(),
+            setOptions: jest.fn(),
+            navigationOptions: jest.fn(),    
+        };
+        const { getByTestId } = render(<ChatScreen navigation={mockNavigate} route={{ params: { name: "name", otherUserId: "otheruserid" }}}/>);
         await waitFor(() => expect(getByTestId('chat')).toBeDefined());
     });
 });
