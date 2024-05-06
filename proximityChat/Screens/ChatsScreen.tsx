@@ -12,14 +12,14 @@ import { useNavigation } from '@react-navigation/native';
 const ChatsScreen = () => {
   
     const [conversations,setConversations] = useState([]);
+    const [users,setUsers] = useState([]);
     const [messages,setMessages] = useState([]);
     const navigation = useNavigation();
 
     useEffect(() => {
         fetchConversation();
+        fetchusers();
       }, []);
-      //faire la logique quand le user na aucune conversation pour pas ca plente
-
 
       function fetchConversation() {
         const user = firebase.auth().currentUser.uid;
@@ -37,6 +37,13 @@ const ChatsScreen = () => {
             setConversations([]); // Mettez à jour l'état avec un tableau vide si aucun objet de conversation n'est trouvé
           }
         });
+      }
+
+      function fetchusers() {
+        //Aller chercher tous les user pour afficher au lieu de leur UID
+        //Sois via realtime et la modifier ou y aller 
+        const users = firebase.database().ref("users");
+        console.log(users)
       }
       
    
