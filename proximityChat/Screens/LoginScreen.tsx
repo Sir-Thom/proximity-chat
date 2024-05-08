@@ -49,7 +49,7 @@ export default function LoginPage({ navigation }) {
                         alt="Your Company"
                     />
                     <Text style={styles.title}>Sign in to your account</Text>
-                    <Text style={{transform:[{rotate: '315deg'}], color:'white', left:135}}>Diagonal Diagonal</Text>
+                    <Text style={{transform:[{rotate: '335deg'}], color:'white', left:135}}>Diagonal Diagonal</Text>
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Email address</Text>
