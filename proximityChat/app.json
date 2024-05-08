@@ -36,11 +36,6 @@
       "web": {
         "favicon": "./assets/favicon.png"
       },
-      "extra": {
-        "eas": {
-          "projectId": "d28b54d3-7dfe-4115-8b74-3efe6b1a10c9"
-        }
-      },
       "owner": "sir-thom"
     }
   }
