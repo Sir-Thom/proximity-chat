@@ -20,14 +20,17 @@ type Conversation = {
 };
 
 export default function ChatScreen(props) {
+    console.log(props.route.params.conversation)
     const { navigation } = props;
-    useEffect(() => {
+    /*useEffect(() => {
         navigation.setOptions({
             title: props.route.params.name,
         });
     }, [navigation]);
+    */
     const user = { id: firebase.auth().currentUser.uid }; // TODO: user par firebase
-    const user2 = { id: props.route.params.otherUserId }; // TODO: user par firebase
+    //const user2 = { id: props.route.params.otherUserId }; // TODO: user par firebase
+    const user2 = props.route.params.conversationId // TODO: user par firebase
     const [conversation, setConversation] = useState<firebase.database.Reference>();
     const [messages, setMessages] = useState<MessageType.Any[]>([]); // TODO: messages par firebase
 

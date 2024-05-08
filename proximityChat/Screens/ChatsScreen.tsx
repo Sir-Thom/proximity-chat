@@ -8,7 +8,6 @@ import { firebase } from "../firebaseconfig";
 import database from '@react-native-firebase/database';
 import Conversation from './Conversation';
 import { useNavigation } from '@react-navigation/native';
-import ContextMenu from "react-native-context-menu-view";
 import { createStackNavigator } from '@react-navigation/stack';
 
 const ChatsScreen = (props) => {
@@ -35,7 +34,8 @@ const ChatsScreen = (props) => {
               id: key,
               ...val
             }));
-            setConversations(conversationsArray); 
+            setConversations(conversationsArray);
+            console.log(conversations);
           } else {
             setConversations([]); 
           }
@@ -69,7 +69,8 @@ const ChatsScreen = (props) => {
               <TouchableOpacity
                 onLongPress={() => handleLongPress(item.id)}
                 onPress={() => {
-                  navigation.navigate('Chat');
+                  console.log(item)
+                  navigation.navigate('Chat', { conversation: item });
                 }}
               >
                 <View style={styles.conversationItem}>
