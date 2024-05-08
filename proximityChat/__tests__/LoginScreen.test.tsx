@@ -10,11 +10,19 @@ jest.mock('../firebaseconfig', () => ({
     },
 }));
 
+/*jest.mock('react-native', () => ({
+    Alert: {
+        alert: jest.fn(),
+    },
+}));*/
+
 describe('LoginScreen', () => {
     it('alert if data is empty', async () => {
         const { getByText } = render(<LoginScreen navigation={{ navigate: jest.fn() }} />);
         const signInButton = getByText('Sign in');
 
         fireEvent.press(signInButton);
+
+        //expect(Alert.alert).toHaveBeenCalledWith('Invalid input', 'Please fill in all fields.');
     });
 });
