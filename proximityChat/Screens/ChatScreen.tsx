@@ -19,9 +19,15 @@ type Conversation = {
     messages: MessageType.Any[];
 };
 
-export default function ChatScreen({ navigation, name, otherUserId }) {
+export default function ChatScreen(props) {
+    const { navigation } = props;
+    useEffect(() => {
+        navigation.setOptions({
+            title: props.route?.params?.name ?? 'name',
+        });
+    }, [navigation]);
     const user = { id: firebase.auth().currentUser.uid }; // TODO: user par firebase
-    const user2 = { id: otherUserId }; // TODO: user par firebase
+    const user2 = { id: props?.route?.params?.otherUserId ?? 'otheruserid' }; // TODO: user par firebase
     const [conversation, setConversation] = useState<firebase.database.Reference>();
     const [messages, setMessages] = useState<MessageType.Any[]>([]); // TODO: messages par firebase
 
@@ -135,7 +141,7 @@ export default function ChatScreen({ navigation, name, otherUserId }) {
 }
 
 ChatScreen.navigationOptions = ({ route }) => ({
-    title: route.params.name, // Set the header title to the user name
-    headerTitle: route.params.name, // Set the screen name to the user name
+    title: route?.params?.name ?? 'name', // Set the header title to the user name
+    headerTitle: route?.params?.name ?? 'name', // Set the screen name to the user name
     backgroundColor: '#000000',
 });
