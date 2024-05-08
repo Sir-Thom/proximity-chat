@@ -9,15 +9,15 @@ import database from '@react-native-firebase/database';
 import Conversation from './Conversation';
 import { useNavigation } from '@react-navigation/native';
 import ContextMenu from "react-native-context-menu-view";
+import { createStackNavigator } from '@react-navigation/stack';
 
-const ChatsScreen = () => {
+const ChatsScreen = (props) => {
   
     const [conversations,setConversations] = useState([]);
     const [users,setUsers] = useState([]);
     const [messages,setMessages] = useState([]);
     const navigation = useNavigation();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
-
 
     useEffect(() => {
         fetchConversation();
@@ -30,35 +30,28 @@ const ChatsScreen = () => {
         const ConversationsRef = firebase.database().ref("users/" + user + "/conversations");
         ConversationsRef.on('value', snapshot => {
           const conversationsObj = snapshot.val();
-          if (conversationsObj) { // Vérifiez si l'objet n'est pas null
+          if (conversationsObj) { 
             const conversationsArray = Object.entries(conversationsObj).map(([key, val]) => ({
               id: key,
               ...val
             }));
-            setConversations(conversationsArray); // Mettez à jour l'état avec le nouveau tableau
+            setConversations(conversationsArray); 
           } else {
-            setConversations([]); // Mettez à jour l'état avec un tableau vide si aucun objet de conversation n'est trouvé
+            setConversations([]); 
           }
         });
       }
 
       function fetchusers() {
-        //Aller chercher tous les user pour afficher au lieu de leur UID
-        //Sois via realtime et la modifier ou y aller 
         const users = firebase.database().ref("users");
         console.log(users)
       }
 
       const handleLongPress = (conversationId) => {
         console.log("Rentrer");
-       
-        // Afficher la liste déroulante avec l'option "Supprimer"
-        // Lorsque l'utilisateur sélectionne "Supprimer", appelez deleteConversation(conversationId)
       };
     
       const deleteConversation = (conversationId) => {
-        // Supprimer la conversation de la base de données Firebase
-        // Utilisez firebase.database().ref("users/" + user + "/conversations/" + conversationId).remove();
       };
       
    
@@ -76,7 +69,7 @@ const ChatsScreen = () => {
               <TouchableOpacity
                 onLongPress={() => handleLongPress(item.id)}
                 onPress={() => {
-                  navigation.navigate('ChatScreen', { conversation: item });
+                  navigation.navigate('Chat');
                 }}
               >
                 <View style={styles.conversationItem}>
@@ -107,26 +100,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flexDirection: 'row', // Alignement horizontal des éléments
     alignItems: 'center', // Centre verticalement les éléments
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20, // Pour créer un cercle
-    marginRight: 10,
-  },
-  conversationText: {
-    flex: 1, // Utilise tout l'espace disponible
-  },
-  senderName: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  lastMessage: {
-    color: '#888888', // Couleur de texte grise
-  },
+  }
 });
-
-    
 
 export default ChatsScreen;
 
