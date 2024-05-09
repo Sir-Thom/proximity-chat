@@ -20,8 +20,8 @@ type Conversation = {
 };
 
 export default function ChatScreen(props) {
-    console.log(props.route.params.conversation)
-    console.log(props.route.params.conversation.id)
+   //console.log(props.route.params.conversation)
+    //console.log(props.route.params.conversation.id)
     const { navigation } = props;
     /*useEffect(() => {
         navigation.setOptions({

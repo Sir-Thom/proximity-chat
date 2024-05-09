@@ -17,11 +17,27 @@ const ChatsScreen = (props) => {
     const [messages,setMessages] = useState([]);
     const navigation = useNavigation();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const [userFullNames, setUserFullNames] = useState({});
 
     useEffect(() => {
-        fetchConversation();
-        fetchusers();
-      }, []);
+      fetchConversation();
+    }, []);
+  
+    useEffect(() => {
+      // Cette fonction est appelée chaque fois que `conversations` change.
+      const fetchUserNames = async () => {
+        const names = {};
+        for (const conversation of conversations) {
+          const userData = await getUserFullNameByUid(conversation.id);
+          if (userData) {
+            names[conversation.id] = `${userData.firstname} ${userData.lastname}`;
+          }
+        }
+        setUserFullNames(names);
+      };
+  
+      fetchUserNames();
+    }, [conversations]);
 
       function fetchConversation() {
         const user = firebase.auth().currentUser.uid;
@@ -35,17 +51,48 @@ const ChatsScreen = (props) => {
               ...val
             }));
             setConversations(conversationsArray);
-            console.log(conversations);
+            //console.log(conversations);
+            //getUserFullNameByUid();
+            //getOtherUserName();
           } else {
             setConversations([]); 
           }
         });
       }
 
-      function fetchusers() {
-        const users = firebase.database().ref("users");
-        console.log(users)
+      const getOtherUserName = async () => {
+        const users = await firebase.firestore().collection('users').get();
+        const usersData = users.docs.map((user) => user.data());
+        return usersData;
+    };
+
+    const getUserFullNameByUid = async (uid) => {
+      const userDoc = await firebase.firestore().collection('users').doc("fFV1XrTc9jYOlyEyeZ7jSUpxto73").get();
+      if (userDoc.exists) {
+          const userData = userDoc.data();
+          const { firstname, lastname } = userData;
+          console.log(firstname, lastname);
+          return { firstname, lastname };
+      } else {
+          // Gérer le cas où l'utilisateur n'existe pas
+          console.log('Aucun utilisateur trouvé avec cet uid');
+          return null; // Ou une autre valeur appropriée pour indiquer l'absence d'utilisateur
       }
+  };
+
+  /*
+    const getUserFirstNameByUid = async () => {
+      const userDoc = await firebase.firestore().collection('users').doc("fFV1XrTc9jYOlyEyeZ7jSUpxto73").get();
+      if (userDoc.exists) {
+        console.log(userDoc.data().firstname);
+          return userDoc.data().firstname;
+      } else {
+          // Gérer le cas où l'utilisateur n'existe pas
+          console.log('Aucun utilisateur trouvé avec cet uid');
+      }
+  };
+  */
+  
 
       const handleLongPress = (conversationId) => {
         console.log("Rentrer");
@@ -56,31 +103,30 @@ const ChatsScreen = (props) => {
       
    
    return (
-      <View style={styles.container}>
-        {conversations.length === 0 ? (
-          <View style={styles.centeredMessage}>
-            <Text>Aucune conversation en cours.</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={conversations}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onLongPress={() => handleLongPress(item.id)}
-                onPress={() => {
-                  console.log(item)
-                  navigation.navigate('Chat', { conversation: item });
-                }}
-              >
-                <View style={styles.conversationItem}>
-                  <Text>Destinataire ID: {item.id}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        )}
+    <View style={styles.container}>
+    {conversations.length === 0 ? (
+      <View style={styles.centeredMessage}>
+        <Text>Aucune conversation en cours.</Text>
       </View>
+    ) : (
+      <FlatList
+        data={conversations}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onLongPress={() => handleLongPress(item.id)}
+            onPress={() => {
+              navigation.navigate('Chat', { conversation: item });
+            }}
+          >
+            <View style={styles.conversationItem}>
+              <Text>Conversation avec : {userFullNames[item.id]}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    )}
+  </View>
 );
 
 };
