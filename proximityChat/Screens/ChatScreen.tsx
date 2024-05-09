@@ -30,8 +30,8 @@ export default function ChatScreen(props) {
     }, [navigation]);
     */
     const user = { id: firebase.auth().currentUser.uid }; // TODO: user par firebase
-    //const user2 = { id: props.route.params.otherUserId }; // TODO: user par firebase
-    const user2 = { id: props.route.params.conversation.id };  // TODO: user par firebase
+    const user2 = { id: props.route.params.otherUserId }; // TODO: user par firebase
+    //const user2 = { id: props.route.params.conversation.id };  // TODO: user par firebase
     const [conversation, setConversation] = useState<firebase.database.Reference>();
     const [messages, setMessages] = useState<MessageType.Any[]>([]); // TODO: messages par firebase
 
