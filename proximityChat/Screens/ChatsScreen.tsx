@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Guid from 'guid';
 import { firebase } from "../firebaseconfig";
 import database from '@react-native-firebase/database';
-import Conversation from './Conversation';
+import Conversation from './ConversationScreen';
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -130,7 +130,7 @@ const ChatsScreen = (props) => {
           <TouchableOpacity
             onLongPress={() => handleLongPress(item.id)}
             onPress={() => {
-              navigation.navigate('Chat', { conversation: item });
+              navigation.navigate('Conversation', { conversation: item });
             }}
           >
             <View style={styles.conversationItem}>
