@@ -142,12 +142,26 @@ const styles = StyleSheet.create({
   conversationItem: {
     backgroundColor: '#FFFFFF', // Fond blanc
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    borderBottomColor: '#E0E0E0', // Couleur plus douce pour la séparation
+    paddingVertical: 15, // Un peu plus d'espace vertical pour l'aération
+    paddingHorizontal: 20, // Un peu plus d'espace horizontal pour l'aération
     flexDirection: 'row', // Alignement horizontal des éléments
     alignItems: 'center', // Centre verticalement les éléments
-  }
+    // Ajout d'une ombre pour un effet de profondeur
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    // Arrondir les coins de l'élément
+    borderRadius: 10,
+    // Ajout d'une marge pour séparer les éléments de la liste
+    marginVertical: 5,
+    marginHorizontal: 10,
+  },
 });
 
 export default ChatsScreen;
