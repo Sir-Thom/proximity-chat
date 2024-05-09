@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -17,6 +17,31 @@ import { styles } from '../Styles/AuthStyles';
 export default function LoginPage({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [greeting, setGreeting] = useState('')
+    const Groq = require("groq-sdk");
+    const groq = new Groq({
+        apiKey: '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' //don't use, only for this project
+    });
+
+    async function getGreeting() {
+        const chatCompletion = await getGroqChatCompletion();
+        setGreeting(chatCompletion.choices[0]?.message?.content || "");
+    }
+    async function getGroqChatCompletion() {
+        return groq.chat.completions.create({
+            messages: [
+                {
+                    role: "system",
+                    content: "Give me a greeting message max 3 words"
+                }
+            ],
+            model: "llama3-8b-8192"
+        });
+    }
+
+    useEffect(() => {
+        getGreeting();
+    }, [])
 
     const loginUser = async (email, password) => {
         if (email === '' || password === '') {
@@ -49,7 +74,7 @@ export default function LoginPage({ navigation }) {
                         alt="Your Company"
                     />
                     <Text style={styles.title}>Sign in to your account</Text>
-                    <Text style={{transform:[{rotate: '335deg'}], color:'white', left:135}}>Diagonal Diagonal</Text>
+                    <Text style={{transform:[{rotate: '335deg'}], color:'white', left:135}}>{greeting}</Text>
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.label}>Email address</Text>
