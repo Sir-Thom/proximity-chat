@@ -67,7 +67,7 @@ const ChatsScreen = (props) => {
     };
 
     const getUserFullNameByUid = async (uid) => {
-      const userDoc = await firebase.firestore().collection('users').doc("fFV1XrTc9jYOlyEyeZ7jSUpxto73").get();
+      const userDoc = await firebase.firestore().collection('users').doc(uid).get();
       if (userDoc.exists) {
           const userData = userDoc.data();
           const { firstname, lastname } = userData;
@@ -140,14 +140,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   conversationItem: {
-    backgroundColor: '#FFFFFF', // Fond blanc
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0', // Couleur plus douce pour la séparation
-    paddingVertical: 15, // Un peu plus d'espace vertical pour l'aération
-    paddingHorizontal: 20, // Un peu plus d'espace horizontal pour l'aération
-    flexDirection: 'row', // Alignement horizontal des éléments
-    alignItems: 'center', // Centre verticalement les éléments
-    // Ajout d'une ombre pour un effet de profondeur
+    borderBottomColor: '#E0E0E0',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -156,9 +155,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
-    // Arrondir les coins de l'élément
     borderRadius: 10,
-    // Ajout d'une marge pour séparer les éléments de la liste
     marginVertical: 5,
     marginHorizontal: 10,
   },
