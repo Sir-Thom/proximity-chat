@@ -20,12 +20,11 @@ export default function LoginPage({ navigation }) {
     const [greeting, setGreeting] = useState('')
     const Groq = require("groq-sdk");
     const groq = new Groq({
-        apiKey: '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'
+        apiKey: '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' //don't use, only for this project
     });
 
     async function getGreeting() {
         const chatCompletion = await getGroqChatCompletion();
-        console.log(chatCompletion.choices[0]?.message?.content || "");
         setGreeting(chatCompletion.choices[0]?.message?.content || "");
     }
     async function getGroqChatCompletion() {
