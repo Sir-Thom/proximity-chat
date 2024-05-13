@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar, View, Image, useColorScheme } from 'react-native';
 
 import ChatScreen from './Screens/ChatScreen';
+import ConversationScreen from './Screens/ConversationScreen';
 import LoginScreen from './Screens/LoginScreen';
 import MapScreen from './Screens/MapScreen';
 import RegistrationScreen from './Screens/RegistrationScreen';
@@ -153,6 +154,7 @@ function App() {
             <stack.Screen name="MyTabs" component={MyTabs} options={{ headerShown: false }} />
             <stack.Screen name="Map" component={MapScreen} />
             <stack.Screen name="Chat" component={ChatScreen} />
+            <stack.Screen name="Conversation" component={ConversationScreen} />
             <stack.Screen name="My profile" component={UserProfile} />
         </stack.Navigator>
     );
