@@ -32,7 +32,7 @@ export default function LoginPage({ navigation }) {
             messages: [
                 {
                     role: "system",
-                    content: "Give me a greeting message max 3 words"
+                    content: "Give me a greeting message max 4 words"
                 }
             ],
             model: "llama3-8b-8192"
