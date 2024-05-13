@@ -25,13 +25,12 @@ export default function ChatScreen(props) {
     const { navigation } = props;
     /*useEffect(() => {
         navigation.setOptions({
-            title: props.route.params.name,
+            title: props.route?.params?.name ?? 'name',
         });
     }, [navigation]);
     */
     const user = { id: firebase.auth().currentUser.uid }; // TODO: user par firebase
-    const user2 = { id: props.route.params.otherUserId }; // TODO: user par firebase
-    //const user2 = { id: props.route.params.conversation.id };  // TODO: user par firebase
+    const user2 = { id: props?.route?.params?.otherUserId ?? 'otheruserid' }; // TODO: user par firebase
     const [conversation, setConversation] = useState<firebase.database.Reference>();
     const [messages, setMessages] = useState<MessageType.Any[]>([]); // TODO: messages par firebase
 
@@ -111,7 +110,6 @@ export default function ChatScreen(props) {
     }, [colorScheme]);
 
     useEffect(() => {
-        const conversationRef = firebase.database().ref('conversations');
         const userRef = firebase.database().ref('users/' + user.id);
         const tempConversation = userRef.child('conversations').child(user2.id);
 
@@ -128,20 +126,25 @@ export default function ChatScreen(props) {
     }, []);
 
     return (
-        <Chat
-            messages={messages}
-            user={user}
-            theme={colorScheme === 'dark' ? darkTheme : defaultTheme}
-            onSendPress={handleSendPress}
-            onAttachmentPress={handleImageSelection}
-            onPreviewDataFetched={handlePreviewDataFetched}
-            showUserAvatars
-        />
+        <View
+            style={{height: "100%", width: "100%"}}
+            testID='chat'
+        >
+            <Chat
+                messages={messages}
+                user={user}
+                theme={colorScheme === 'dark' ? darkTheme : defaultTheme}
+                onSendPress={handleSendPress}
+                onAttachmentPress={handleImageSelection}
+                onPreviewDataFetched={handlePreviewDataFetched}
+                showUserAvatars
+            />
+        </View>
     );
 }
 
 ChatScreen.navigationOptions = ({ route }) => ({
-    title: route.params.name, // Set the header title to the user name
-    headerTitle: route.params.name, // Set the screen name to the user name
+    title: route?.params?.name ?? 'name', // Set the header title to the user name
+    headerTitle: route?.params?.name ?? 'name', // Set the screen name to the user name
     backgroundColor: '#000000',
 });

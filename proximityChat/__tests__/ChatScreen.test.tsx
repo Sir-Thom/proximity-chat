@@ -3,27 +3,49 @@ import React from 'react';
 import { Alert } from 'react-native';
 import ChatScreen from '../Screens/ChatScreen';
 
-jest.mock('expo-location', () => ({
-    requestForegroundPermissionsAsync: jest.fn()
-        .mockResolvedValueOnce({ status: 'granted' }) // Simulate granted state
-        .mockResolvedValueOnce({ status: 'denied' }) // Simulate denied state
-        .mockResolvedValueOnce({ status: 'granted' }) 
-        .mockResolvedValueOnce({ status: 'granted' }) ,
+jest.mock('@flyerhq/react-native-chat-ui', () => {
+    const lib = jest.requireActual('@flyerhq/react-native-chat-ui');
 
-
-    getCurrentPositionAsync: jest.fn().mockResolvedValue({ coords: { latitude: 40.7128, longitude: -74.006 } }),
-}));
-
+    return {
+        Chat: ({t}) => (<>{t}</>),
+        MessageType: lib.MessageType,
+        defaultTheme: lib.defaultTheme,
+        darkTheme: lib.darkTheme,
+        Theme: lib.Theme,
+    }
+});
 
 jest.mock('../firebaseconfig', () => ({
     firebase: {
         auth: () => ({ currentUser: { uid: 'mockUserId' } }),
+        database: () => ({
+            ref: () => ({
+                child: () => ({
+                    child: () => ({
+                        child: () => ({
+                            on: jest.fn((event, callback) => {
+                                callback({
+                                    val: () => ({
+                                        messages: [],
+                                    }),
+                                });
+                            }),
+                        }),
+                    }),
+                }),
+            }),
+        })
     },
 }));
 
-describe('MapScreen component', () => {
-    it('chat is created 👍', async () => {
-        const { getByTestId } = render(<ChatScreen />);
+describe('ChatScreen component', () => {
+    it('Chat is created', async () => {
+        const mockNavigate = { 
+            navigate: jest.fn(),
+            setOptions: jest.fn(),
+            navigationOptions: jest.fn(),    
+        };
+        const { getByTestId } = render(<ChatScreen navigation={mockNavigate} route={{ params: { name: "name", otherUserId: "otheruserid" }}}/>);
         await waitFor(() => expect(getByTestId('chat')).toBeDefined());
     });
 });
