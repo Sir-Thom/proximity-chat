@@ -8,30 +8,31 @@ import { Appearance, View } from 'react-native';
 
 import { firebase } from '../firebaseconfig';
 
-type Conversations = {
-    user1: {
-        id: string,
-        convRef: firebase.database.Reference,
-    }
-    user2: {
-        id: string,
-        convRef: firebase.database.Reference,
-    }
+// type Message = MessageType.Any & {
+//   parentid: string;
+//   fromuserid: string;
+//   touserid: string;
+// }
+
+type Conversation = {
+    id: string;
+    messages: MessageType.Any[];
 };
 
-export default function ChatScreen(props) {
+export default function ConversationScreen(props) {
    //console.log(props.route.params.conversation)
     //console.log(props.route.params.conversation.id)
     const { navigation } = props;
     /*useEffect(() => {
         navigation.setOptions({
-            title: props.route?.params?.name ?? 'name',
+            title: props.route.params.name,
         });
     }, [navigation]);
     */
     const user = { id: firebase.auth().currentUser.uid }; // TODO: user par firebase
-    const user2 = { id: props?.route?.params?.otherUserId ?? 'otheruserid' }; // TODO: user par firebase
-    const [conversation, setConversation] = useState<Conversations>();
+    //const user2 = { id: props.route.params.otherUserId }; // TODO: user par firebase
+    const user2 = { id: props.route.params.conversation.id };  // TODO: user par firebase
+    const [conversation, setConversation] = useState<firebase.database.Reference>();
     const [messages, setMessages] = useState<MessageType.Any[]>([]); // TODO: messages par firebase
 
     const colorScheme = Appearance.getColorScheme();
@@ -45,9 +46,7 @@ export default function ChatScreen(props) {
             text: message.text,
             type: 'text',
         };
-
-        conversation.user1.convRef.child('messages').push(textMessage);
-        conversation.user2.convRef.child('messages').push(textMessage);
+        conversation.child('messages').push(textMessage);
     }
 
     async function handleImageSelection() {
@@ -73,8 +72,7 @@ export default function ChatScreen(props) {
             width: response.width,
         };
 
-        conversation.user1.convRef.child('messages').push(imageMessage);
-        conversation.user2.convRef.child('messages').push(imageMessage);
+        conversation.child('messages').push(imageMessage);
     }
 
     function handlePreviewDataFetched({
@@ -113,50 +111,37 @@ export default function ChatScreen(props) {
     }, [colorScheme]);
 
     useEffect(() => {
+        const conversationRef = firebase.database().ref('conversations');
         const userRef = firebase.database().ref('users/' + user.id);
-        const user2Ref = firebase.database().ref('users/' + user2.id);
         const tempConversation = userRef.child('conversations').child(user2.id);
-        const tempConversation2 = user2Ref.child('conversations').child(user.id);
 
-        setConversation({
-            user1: {
-                id: user.id,
-                convRef: tempConversation,
-            },
-            user2: {
-                id: user2.id,
-                convRef: tempConversation2,
-            }
-        });
-        
+        setConversation(tempConversation);
+
         tempConversation.child('messages').on('value', (snapshot) => {
-            setMessages((Object.entries(snapshot.val() ?? {})
-            ?.map((x) => x[1])
-            .reverse()
-            .splice(0, 50) as MessageType.Any[]) ?? []);
+            setMessages(
+                (Object.entries(snapshot.val() ?? {})
+                    ?.map((x) => x[1])
+                    .reverse()
+                    .splice(0, 50) as MessageType.Any[]) ?? [],
+            );
         });
     }, []);
 
     return (
-        <View
-            style={{height: "100%", width: "100%"}}
-            testID='chat'
-        >
-            <Chat
-                messages={messages}
-                user={user}
-                theme={colorScheme === 'dark' ? darkTheme : defaultTheme}
-                onSendPress={handleSendPress}
-                onAttachmentPress={handleImageSelection}
-                onPreviewDataFetched={handlePreviewDataFetched}
-                showUserAvatars
-            />
-        </View>
+        <Chat
+            messages={messages}
+            user={user}
+            theme={colorScheme === 'dark' ? darkTheme : defaultTheme}
+            onSendPress={handleSendPress}
+            onAttachmentPress={handleImageSelection}
+            onPreviewDataFetched={handlePreviewDataFetched}
+            showUserAvatars
+        />
     );
 }
 
-ChatScreen.navigationOptions = ({ route }) => ({
-    title: route?.params?.name ?? 'name', // Set the header title to the user name
-    headerTitle: route?.params?.name ?? 'name', // Set the screen name to the user name
+ConversationScreen.navigationOptions = ({ route }) => ({
+    title: route.params.name, // Set the header title to the user name
+    headerTitle: route.params.name, // Set the screen name to the user name
     backgroundColor: '#000000',
 });

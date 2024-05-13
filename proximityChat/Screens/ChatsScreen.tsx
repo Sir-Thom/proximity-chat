@@ -6,9 +6,8 @@ import * as ImagePicker from 'expo-image-picker';
 import Guid from 'guid';
 import { firebase } from "../firebaseconfig";
 import database from '@react-native-firebase/database';
-import Conversation from './Conversation';
+import Conversation from './ConversationScreen';
 import { useNavigation } from '@react-navigation/native';
-import ContextMenu from "react-native-context-menu-view";
 import { createStackNavigator } from '@react-navigation/stack';
 
 const ChatsScreen = (props) => {
@@ -18,11 +17,30 @@ const ChatsScreen = (props) => {
     const [messages,setMessages] = useState([]);
     const navigation = useNavigation();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const [userFullNames, setUserFullNames] = useState({});
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedConversationId, setSelectedConversationId] = useState(null);
+
 
     useEffect(() => {
-        fetchConversation();
-        fetchusers();
-      }, []);
+      fetchConversation();
+    }, []);
+  
+    useEffect(() => {
+      // Cette fonction est appelée chaque fois que `conversations` change.
+      const fetchUserNames = async () => {
+        const names = {};
+        for (const conversation of conversations) {
+          const userData = await getUserFullNameByUid(conversation.id);
+          if (userData) {
+            names[conversation.id] = `${userData.firstname} ${userData.lastname}`;
+          }
+        }
+        setUserFullNames(names);
+      };
+  
+      fetchUserNames();
+    }, [conversations]);
 
       function fetchConversation() {
         const user = firebase.auth().currentUser.uid;
@@ -35,51 +53,121 @@ const ChatsScreen = (props) => {
               id: key,
               ...val
             }));
-            setConversations(conversationsArray); 
+            setConversations(conversationsArray);
+            //console.log(conversations);
+            //getUserFullNameByUid();
+            //getOtherUserName();
           } else {
             setConversations([]); 
           }
         });
       }
 
-      function fetchusers() {
-        const users = firebase.database().ref("users");
-        console.log(users)
+      const getOtherUserName = async () => {
+        const users = await firebase.firestore().collection('users').get();
+        const usersData = users.docs.map((user) => user.data());
+        return usersData;
+    };
+
+    const getUserFullNameByUid = async (uid) => {
+      const userDoc = await firebase.firestore().collection('users').doc(uid).get();
+      if (userDoc.exists) {
+          const userData = userDoc.data();
+          const { firstname, lastname } = userData;
+          console.log(firstname, lastname);
+          return { firstname, lastname };
+      } else {
+          console.log('Aucun utilisateur trouvé avec cet uid');
+          return null;
       }
+  };
+
+  /*
+    const getUserFirstNameByUid = async () => {
+      const userDoc = await firebase.firestore().collection('users').doc("fFV1XrTc9jYOlyEyeZ7jSUpxto73").get();
+      if (userDoc.exists) {
+        console.log(userDoc.data().firstname);
+          return userDoc.data().firstname;
+      } else {
+          // Gérer le cas où l'utilisateur n'existe pas
+          console.log('Aucun utilisateur trouvé avec cet uid');
+      }
+  };
+  */
+  
 
       const handleLongPress = (conversationId) => {
-        console.log("Rentrer");
+        setSelectedConversationId(conversationId);
+        setModalVisible(true);
       };
+  
     
-      const deleteConversation = (conversationId) => {
+      const deleteConversation = async () => {
+        // Assurez-vous que selectedConversationId n'est pas null
+        if (selectedConversationId) {
+          try {
+            await firebase.database().ref("users/" + firebase.auth().currentUser.uid + "/conversations/" + selectedConversationId).remove();
+            setModalVisible(false); // Fermer le modal après la suppression
+          } catch (error) {
+            console.error("Erreur lors de la suppression de la conversation :", error);
+          }
+        }
       };
+      
       
    
    return (
-      <View style={styles.container}>
-        {conversations.length === 0 ? (
-          <View style={styles.centeredMessage}>
-            <Text>Aucune conversation en cours.</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={conversations}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onLongPress={() => handleLongPress(item.id)}
-                onPress={() => {
-                  navigation.navigate('Chat');
-                }}
-              >
-                <View style={styles.conversationItem}>
-                  <Text>Destinataire ID: {item.id}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        )}
+    <View style={styles.container}>
+    {conversations.length === 0 ? (
+      <View style={styles.centeredMessage}>
+        <Text>Aucune conversation en cours.</Text>
       </View>
+    ) : (
+      <FlatList
+        data={conversations}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onLongPress={() => handleLongPress(item.id)}
+            onPress={() => {
+              navigation.navigate('Conversation', { conversation: item });
+            }}
+          >
+            <View style={styles.conversationItem}>
+              <Text>Conversation avec : {userFullNames[item.id]}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    )}
+    <Modal
+  animationType="slide"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => {
+    setModalVisible(!modalVisible);
+  }}
+>
+  <View style={styles.centeredView}>
+    <View style={styles.modalView}>
+      <Text style={styles.modalText}>Êtes-vous sûr de vouloir supprimer cette conversation ?</Text>
+      <TouchableOpacity
+        style={styles.buttonClose}
+        onPress={() => setModalVisible(!modalVisible)}
+      >
+        <Text style={styles.textStyle}>Annuler</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.buttonDelete}
+        onPress={deleteConversation}
+      >
+        <Text style={styles.textStyle}>Supprimer</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
+  </View>
 );
 
 };
@@ -93,13 +181,67 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   conversationItem: {
-    backgroundColor: '#FFFFFF', // Fond blanc
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    flexDirection: 'row', // Alignement horizontal des éléments
-    alignItems: 'center', // Centre verticalement les éléments
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    borderRadius: 10,
+    marginVertical: 5,
+    marginHorizontal: 10,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonDelete: {
+    backgroundColor: "#FF0000",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 15
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
   }
 });
 
