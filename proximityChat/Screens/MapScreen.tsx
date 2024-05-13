@@ -107,7 +107,7 @@ const MapScreen = ({ navigation }) => {
                                     icon={Asset.fromModule(require('../assets/marker.png'))}
                                     onPress={async () => {
                                         const firstName = await getUserFirstnameById(user.userid);
-                                        navigation.navigate('Chat', { name: firstName, otherUserId: user.userid });
+                                        navigation.navigate('Chat', { name: firstName, userid: user.userid });
                                     }}
                                 />
                             );
