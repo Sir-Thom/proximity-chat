@@ -8,30 +8,27 @@ import { Appearance, View } from 'react-native';
 
 import { firebase } from '../firebaseconfig';
 
-// type Message = MessageType.Any & {
-//   parentid: string;
-//   fromuserid: string;
-//   touserid: string;
-// }
-
-type Conversation = {
-    id: string;
-    messages: MessageType.Any[];
+type Conversations = {
+    user1: {
+        id: string,
+        convRef: firebase.database.Reference,
+    }
+    user2: {
+        id: string,
+        convRef: firebase.database.Reference,
+    }
 };
 
 export default function ChatScreen(props) {
-   //console.log(props.route.params.conversation)
-    //console.log(props.route.params.conversation.id)
     const { navigation } = props;
-    /*useEffect(() => {
+    useEffect(() => {
         navigation.setOptions({
             title: props.route?.params?.name ?? 'name',
         });
     }, [navigation]);
-    */
     const user = { id: firebase.auth().currentUser.uid }; // TODO: user par firebase
     const user2 = { id: props?.route?.params?.otherUserId ?? 'otheruserid' }; // TODO: user par firebase
-    const [conversation, setConversation] = useState<firebase.database.Reference>();
+    const [conversation, setConversation] = useState<Conversations>();
     const [messages, setMessages] = useState<MessageType.Any[]>([]); // TODO: messages par firebase
 
     const colorScheme = Appearance.getColorScheme();
@@ -45,7 +42,9 @@ export default function ChatScreen(props) {
             text: message.text,
             type: 'text',
         };
-        conversation.child('messages').push(textMessage);
+
+        conversation.user1.convRef.child('messages').push(textMessage);
+        conversation.user2.convRef.child('messages').push(textMessage);
     }
 
     async function handleImageSelection() {
@@ -71,7 +70,8 @@ export default function ChatScreen(props) {
             width: response.width,
         };
 
-        conversation.child('messages').push(imageMessage);
+        conversation.user1.convRef.child('messages').push(imageMessage);
+        conversation.user2.convRef.child('messages').push(imageMessage);
     }
 
     function handlePreviewDataFetched({
@@ -111,17 +111,26 @@ export default function ChatScreen(props) {
 
     useEffect(() => {
         const userRef = firebase.database().ref('users/' + user.id);
+        const user2Ref = firebase.database().ref('users/' + user2.id);
         const tempConversation = userRef.child('conversations').child(user2.id);
+        const tempConversation2 = user2Ref.child('conversations').child(user.id);
 
-        setConversation(tempConversation);
-
+        setConversation({
+            user1: {
+                id: user.id,
+                convRef: tempConversation,
+            },
+            user2: {
+                id: user2.id,
+                convRef: tempConversation2,
+            }
+        });
+        
         tempConversation.child('messages').on('value', (snapshot) => {
-            setMessages(
-                (Object.entries(snapshot.val() ?? {})
-                    ?.map((x) => x[1])
-                    .reverse()
-                    .splice(0, 50) as MessageType.Any[]) ?? [],
-            );
+            setMessages((Object.entries(snapshot.val() ?? {})
+            ?.map((x) => x[1])
+            .reverse()
+            .splice(0, 50) as MessageType.Any[]) ?? []);
         });
     }, []);
 
