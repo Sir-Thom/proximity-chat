@@ -20,15 +20,12 @@ type Conversations = {
 };
 
 export default function ChatScreen(props) {
-   //console.log(props.route.params.conversation)
-    //console.log(props.route.params.conversation.id)
     const { navigation } = props;
-    /*useEffect(() => {
+    useEffect(() => {
         navigation.setOptions({
             title: props.route?.params?.name ?? 'name',
         });
     }, [navigation]);
-    */
     const user = { id: firebase.auth().currentUser.uid }; // TODO: user par firebase
     const user2 = { id: props?.route?.params?.otherUserId ?? 'otheruserid' }; // TODO: user par firebase
     const [conversation, setConversation] = useState<Conversations>();
