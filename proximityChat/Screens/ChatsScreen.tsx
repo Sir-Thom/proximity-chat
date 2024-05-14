@@ -128,6 +128,7 @@ const ChatsScreen = (props) => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
+            testID={`conversation-${item.id}`}
             onLongPress={() => handleLongPress(item.id)}
             onPress={() => {
               navigation.navigate('Conversation', { conversation: item });
