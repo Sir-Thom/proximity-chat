@@ -9,7 +9,7 @@ import database from '@react-native-firebase/database';
 import Conversation from './ConversationScreen';
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import { getUser } from '../utils/GetUser';
 const ChatsScreen = (props) => {
   
     const [conversations,setConversations] = useState([]);
@@ -20,27 +20,33 @@ const ChatsScreen = (props) => {
     const [userFullNames, setUserFullNames] = useState({});
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedConversationId, setSelectedConversationId] = useState(null);
-
+    const [firstname, setFirstname] = useState(null);
 
     useEffect(() => {
       fetchConversation();
     }, []);
   
     useEffect(() => {
+     
       // Cette fonction est appelée chaque fois que `conversations` change.
       const fetchUserNames = async () => {
         const names = {};
+        const firstName = {};
         for (const conversation of conversations) {
           const userData = await getUserFullNameByUid(conversation.id);
+          const userFirstName = await getUserFirstNameByUid(conversation.id);
           if (userData) {
             names[conversation.id] = `${userData.firstname} ${userData.lastname}`;
+            firstName[conversation.id] = `${userData.firstname}`;
           }
         }
+        setFirstname(firstName);
         setUserFullNames(names);
       };
   
       fetchUserNames();
     }, [conversations]);
+    
 
       function fetchConversation() {
         const user = firebase.auth().currentUser.uid;
@@ -54,6 +60,7 @@ const ChatsScreen = (props) => {
               ...val
             }));
             setConversations(conversationsArray);
+            
             //console.log(conversations);
             //getUserFullNameByUid();
             //getOtherUserName();
@@ -68,11 +75,23 @@ const ChatsScreen = (props) => {
         const usersData = users.docs.map((user) => user.data());
         return usersData;
     };
+    const getUserFirstNameByUid = async (uid) => {
+      const userDoc = await firebase.firestore().collection('users').doc(uid).get();
+      if (userDoc.exists) {
+          const userData = userDoc.data();
+          const { firstname } = userData;
+          return firstname;
+      } else {
+          console.log('Aucun utilisateur trouvé avec cet uid');
+          return null;
+      }
+    };
 
     const getUserFullNameByUid = async (uid) => {
       const userDoc = await firebase.firestore().collection('users').doc(uid).get();
       if (userDoc.exists) {
           const userData = userDoc.data();
+          setUsers();
           const { firstname, lastname } = userData;
           console.log(firstname, lastname);
           return { firstname, lastname };
@@ -113,7 +132,7 @@ const ChatsScreen = (props) => {
           }
         }
       };
-      
+    
       
    
    return (
@@ -130,7 +149,8 @@ const ChatsScreen = (props) => {
           <TouchableOpacity
             onLongPress={() => handleLongPress(item.id)}
             onPress={() => {
-              navigation.navigate('Conversation', { conversation: item });
+              
+              navigation.navigate('Conversation', { name:firstname[item.id],conversation: item });
             }}
           >
             <View style={styles.conversationItem}>
