@@ -20,9 +20,15 @@ type Conversation = {
 };
 
 export default function ConversationScreen(props) {
-   //console.log(props.route.params.conversation)
-    //console.log(props.route.params.conversation.id)
     const { navigation } = props;
+    useEffect(() => {
+        navigation.setOptions({
+            title: props.route?.params?.name ?? 'name',
+            conversation: props.route?.params?.conversation ?? 'conversation',
+        });
+    }, [navigation]);
+
+   
     /*useEffect(() => {
         navigation.setOptions({
             title: props.route.params.name,
